@@ -4,8 +4,10 @@ using System.Collections;
 using System.Collections.Generic;
 using LuaInterface;
 
+using SimpleFramework.Utils;
+
 namespace SimpleFramework.Manager {
-    public class NetworkManager : View {
+    public class NetworkManager : MonoBehaviour {
         private SocketClient socket;
         static Queue<KeyValuePair<int, ByteBuffer>> sEvents = new Queue<KeyValuePair<int, ByteBuffer>>();
 
@@ -52,7 +54,7 @@ namespace SimpleFramework.Manager {
             if (sEvents.Count > 0) {
                 while (sEvents.Count > 0) {
                     KeyValuePair<int, ByteBuffer> _event = sEvents.Dequeue();
-                    facade.SendMessageCommand(NotiConst.DISPATCH_MESSAGE, _event);
+                    // facade.SendMessageCommand(NotiConst.DISPATCH_MESSAGE, _event);
                 }
             }
         }

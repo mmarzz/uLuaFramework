@@ -14,7 +14,7 @@ using SimpleFramework.Manager;
 using UnityEditor;
 #endif
 
-namespace SimpleFramework {
+namespace SimpleFramework.Utils {
     public class Util {
         private static List<string> luaPaths = new List<string>();
 
@@ -284,12 +284,12 @@ namespace SimpleFramework {
         }
 
         /// <summary>
-        /// 清理内存
+        /// 清理内存 TODO
         /// </summary>
         public static void ClearMemory() {
-            GC.Collect(); Resources.UnloadUnusedAssets();
-            LuaScriptMgr mgr = AppFacade.Instance.GetManager<LuaScriptMgr>(ManagerName.Lua);
-            if (mgr != null && mgr.lua != null) mgr.LuaGC();
+            // GC.Collect(); Resources.UnloadUnusedAssets();
+            // LuaScriptMgr mgr = AppFacade.Instance.GetManager<LuaScriptMgr>(ManagerName.Lua);
+            // if (mgr != null && mgr.lua != null) mgr.LuaGC();
         }
 
         /// <summary>
@@ -486,10 +486,10 @@ namespace SimpleFramework {
         }
 
         /// <summary>
-        /// 执行Lua方法
+        /// 执行Lua方法 TODO
         /// </summary>
         public static object[] CallMethod(string module, string func, params object[] args) {
-            LuaScriptMgr luaMgr = AppFacade.Instance.GetManager<LuaScriptMgr>(ManagerName.Lua);
+            LuaScriptMgr luaMgr = ioo.LuaManager;
             if (luaMgr == null) return null;
             string funcName = module + "." + func;
             funcName = funcName.Replace("(Clone)", "");

@@ -3,16 +3,17 @@ using System;
 using System.Collections;
 using SimpleFramework;
 using SimpleFramework.Manager;
+using SimpleFramework.Utils;
 
 public static class WrapFile {
 
     public static BindType[] binds = new BindType[]
     {
         _GT(typeof(object)),
-        _GT(typeof(System.String)),
-        _GT(typeof(System.Enum)),   
+        _GT(typeof(String)),
+        _GT(typeof(Enum)),   
         _GT(typeof(IEnumerator)),
-        _GT(typeof(System.Delegate)),        
+        _GT(typeof(Delegate)),        
         _GT(typeof(Type)).SetBaseName("System.Object"),                                                     
         _GT(typeof(UnityEngine.Object)),
         
@@ -20,8 +21,8 @@ public static class WrapFile {
         ////_GT(typeof(Dictionary<int,string>)).SetWrapName("DictInt2Str").SetLibName("DictInt2Str"),
         
         //custom    
-		_GT(typeof(WWW)),
-		_GT(typeof(Util)),
+		_GT(typeof(ioo)),
+        _GT(typeof(Util)),
 		_GT(typeof(AppConst)),
 		_GT(typeof(ByteBuffer)),
         _GT(typeof(NetworkManager)),
@@ -47,9 +48,9 @@ public static class WrapFile {
         _GT(typeof(TestDelegateListener)),
         _GT(typeof(TestEventListener)),
         _GT(typeof(EventDelegate)),
-        _GT(typeof(UIButton)),
         
-        //unity                        
+        //unity   
+        _GT(typeof(WWW)),                     
         _GT(typeof(Component)),
         _GT(typeof(Behaviour)),
         _GT(typeof(MonoBehaviour)),        
@@ -107,6 +108,8 @@ public static class WrapFile {
         
 
         //ngui
+        _GT(typeof(UIButton)),
+        _GT(typeof(UIButtonColor)),
         /*_GT(typeof(UICamera)),
         _GT(typeof(Localization)),
         _GT(typeof(NGUITools)),

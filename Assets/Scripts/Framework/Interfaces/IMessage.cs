@@ -1,16 +1,16 @@
-﻿/* 
- SimpleFramework Code By Jarjin lee 
-*/
-using System;
+﻿// /* 
+//  SimpleFramework Code By Jarjin lee 
+// */
+// using System;
 
-public interface IMessage
-{
-	string Name { get; }
+// public interface IMessage
+// {
+// 	string Name { get; }
 
-	object Body { get; set; }
+// 	object Body { get; set; }
 		
-	string Type { get; set; }
+// 	string Type { get; set; }
 
-    string ToString();
-}
+//     string ToString();
+// }
 

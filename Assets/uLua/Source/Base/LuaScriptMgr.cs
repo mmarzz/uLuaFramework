@@ -9,6 +9,7 @@ using System.Text;
 using System.Diagnostics;
 using System.Collections;
 using SimpleFramework;
+using SimpleFramework.Utils;
 
 public class LuaScriptMgr
 {

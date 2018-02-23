@@ -3,8 +3,10 @@ using System.Collections;
 using System.IO;
 using System;
 
+using SimpleFramework.Utils;
+
 namespace SimpleFramework.Manager {
-    public class ResourceManager : View {
+    public class ResourceManager : MonoBehaviour {
         private AssetBundle shared;
 
         /// <summary>

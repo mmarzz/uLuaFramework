@@ -35,4 +35,4 @@ sysinfo.txt
 *.unitypackage
 
 # Customer
-Assets/StreamingAssets
+Assets/StreamingAssets*

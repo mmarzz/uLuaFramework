@@ -22,7 +22,7 @@ public class SimpleFramework_LuaBehaviourWrap
 		{
 		};
 
-		LuaScriptMgr.RegisterLib(L, "SimpleFramework.LuaBehaviour", typeof(SimpleFramework.LuaBehaviour), regs, fields, typeof(View));
+		LuaScriptMgr.RegisterLib(L, "SimpleFramework.LuaBehaviour", typeof(SimpleFramework.LuaBehaviour), regs, fields, typeof(MonoBehaviour));
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]

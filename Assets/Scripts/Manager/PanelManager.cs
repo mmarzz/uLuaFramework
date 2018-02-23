@@ -3,8 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using LuaInterface;
 
+using SimpleFramework.Utils;
+
 namespace SimpleFramework.Manager {
-    public class PanelManager : View {
+    public class PanelManager : MonoBehaviour {
         private Transform parent;
 
         Transform Parent {
@@ -22,7 +24,7 @@ namespace SimpleFramework.Manager {
         /// </summary>
         /// <param name="type"></param>
         public void CreatePanel(string name, LuaFunction func = null) {
-            AssetBundle bundle = ResManager.LoadBundle(name);
+            AssetBundle bundle = ioo.ResourceManager.LoadBundle(name);
             StartCoroutine(StartCreatePanel(name, bundle, func));
             Debug.LogWarning("CreatePanel::>> " + name + " " + bundle);
         }

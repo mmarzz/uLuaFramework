@@ -1,5 +1,5 @@
-﻿using System;
+﻿// using System;
 
-public interface IView {
-    void OnMessage(IMessage message);
-}
+// public interface IView {
+//     void OnMessage(IMessage message);
+// }

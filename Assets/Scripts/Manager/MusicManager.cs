@@ -2,8 +2,10 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+using SimpleFramework.Utils;
+
 namespace SimpleFramework.Manager {
-    public class MusicManager : View {
+    public class MusicManager : MonoBehaviour {
         private AudioSource audio;
         private Hashtable sounds = new Hashtable();
 

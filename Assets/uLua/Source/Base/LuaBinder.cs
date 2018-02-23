@@ -64,7 +64,8 @@ public static class LuaBinder
 			case "SimpleFramework_Manager_PanelManagerWrap": SimpleFramework_Manager_PanelManagerWrap.Register(L); break;
 			case "SimpleFramework_Manager_ResourceManagerWrap": SimpleFramework_Manager_ResourceManagerWrap.Register(L); break;
 			case "SimpleFramework_Manager_TimerManagerWrap": SimpleFramework_Manager_TimerManagerWrap.Register(L); break;
-			case "SimpleFramework_UtilWrap": SimpleFramework_UtilWrap.Register(L); break;
+			case "SimpleFramework_Utils_iooWrap": SimpleFramework_Utils_iooWrap.Register(L); break;
+			case "SimpleFramework_Utils_UtilWrap": SimpleFramework_Utils_UtilWrap.Register(L); break;
 			case "SimpleFramework_WrapGridWrap": SimpleFramework_WrapGridWrap.Register(L); break;
 			case "SkinnedMeshRendererWrap": SkinnedMeshRendererWrap.Register(L); break;
 			case "SleepTimeoutWrap": SleepTimeoutWrap.Register(L); break;
@@ -81,6 +82,7 @@ public static class LuaBinder
 			case "TrackedReferenceWrap": TrackedReferenceWrap.Register(L); break;
 			case "TransformWrap": TransformWrap.Register(L); break;
 			case "TypeWrap": TypeWrap.Register(L); break;
+			case "UIButtonColorWrap": UIButtonColorWrap.Register(L); break;
 			case "UIButtonWrap": UIButtonWrap.Register(L); break;
 			case "UIEventListenerWrap": UIEventListenerWrap.Register(L); break;
 			case "UIGridWrap": UIGridWrap.Register(L); break;

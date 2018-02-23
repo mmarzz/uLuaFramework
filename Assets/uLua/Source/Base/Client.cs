@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using System;
 using System.Reflection;
 using LuaInterface;
-using SimpleFramework;
+
+using SimpleFramework.Utils;
 
 
 public class Client : MonoBehaviour 

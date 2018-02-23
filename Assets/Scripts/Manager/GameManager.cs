@@ -5,49 +5,66 @@ using System.Collections.Generic;
 using LuaInterface;
 using System.Reflection;
 using System.IO;
-using Junfine.Debuger;
+
+using SimpleFramework.Utils;
 
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
 namespace SimpleFramework.Manager {
-    public class GameManager : LuaBehaviour {
+    public class GameManager : MonoBehaviour {
         private List<string> downloadFiles = new List<string>();
 
-        /// <summary>
-        /// 初始化游戏管理器
-        /// </summary>
+        LuaScriptMgr luaManager = null;
+        public LuaScriptMgr LuaManager {
+            get {
+                if (luaManager == null) {
+                    luaManager = new LuaScriptMgr();
+                    luaManager.Start();
+                    // luaMgr.name = (++luaIndex).ToString();
+                }
+                return luaManager;
+            }
+        }
+
         void Awake() {
             Init();
         }
 
-        /// <summary>
-        /// 初始化
-        /// </summary>
         void Init() {
-            if (AppConst.ExampleMode) {
-                InitGui();
-            }
+            // if (AppConst.ExampleMode) {
+                // InitGui();
+            // }
             DontDestroyOnLoad(gameObject);  //防止销毁自己
 
+            InitManagers();
             CheckExtractResource(); //释放资源
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
             Application.targetFrameRate = AppConst.GameFrameRate;
         }
 
-        /// <summary>
-        /// 初始化GUI
-        /// </summary>
-        public void InitGui() {
-            string name = "GUI";
-            GameObject gui = GameObject.Find(name);
-            if (gui != null) return;
 
-            GameObject prefab = Util.LoadPrefab(name);
-            gui = Instantiate(prefab) as GameObject;
-            gui.name = name;
+        private void InitManagers() {
+            Util.Add<PanelManager>(gameObject);
+            Util.Add<MusicManager>(gameObject);
+            Util.Add<ResourceManager>(gameObject);
+            // Util.Add<UIManager>(gameObject);
+            Util.Add<TimerManager> (gameObject);
+            Util.Add<NetworkManager> (gameObject);
+            Util.Add<ThreadManager>(gameObject);
         }
+        // public void InitGui() {
+        //     string name = "GUI";
+        //     GameObject gui = GameObject.Find(name);
+        //     if (gui != null) return;
+
+        //     GameObject prefab = Util.LoadPrefab(name);
+        //     gui = Instantiate(prefab) as GameObject;
+        //     gui.name = name;
+        // }
+
+        
 
         /// <summary>
         /// 释放资源
@@ -74,8 +91,8 @@ namespace SimpleFramework.Manager {
             if (File.Exists(outfile)) File.Delete(outfile);
 
             string message = "正在解包文件:>files.txt";
-            Debug.Log(message);
-            facade.SendMessageCommand(NotiConst.UPDATE_MESSAGE, message);
+            Debugger.Log(message);
+            // facade.SendMessageCommand(NotiConst.UPDATE_MESSAGE, message);
 
             if (Application.platform == RuntimePlatform.Android) {
                 WWW www = new WWW(infile);
@@ -96,8 +113,8 @@ namespace SimpleFramework.Manager {
                 outfile = dataPath + fs[0];
 
                 message = "正在解包文件:>" + fs[0];
-                Debug.Log("正在解包文件:>" + infile);
-                facade.SendMessageCommand(NotiConst.UPDATE_MESSAGE, message);
+                Debugger.Log("正在解包文件:>" + infile);
+                // facade.SendMessageCommand(NotiConst.UPDATE_MESSAGE, message);
 
                 string dir = Path.GetDirectoryName(outfile);
                 if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
@@ -119,7 +136,8 @@ namespace SimpleFramework.Manager {
                 yield return new WaitForEndOfFrame();
             }
             message = "解包完成!!!";
-            facade.SendMessageCommand(NotiConst.UPDATE_MESSAGE, message);
+            Debugger.LogWarning(message);
+            // facade.SendMessageCommand(NotiConst.UPDATE_MESSAGE, message);
 
             yield return new WaitForSeconds(0.1f);
             message = string.Empty;
@@ -135,14 +153,14 @@ namespace SimpleFramework.Manager {
             downloadFiles.Clear();
 
             if (!AppConst.UpdateMode) {
-                ResManager.initialize(OnResourceInited);
+                ioo.ResourceManager.initialize(OnResourceInited);
                 yield break;
             }
             string dataPath = Util.DataPath;  //数据目录
             string url = AppConst.WebUrl;
             string random = DateTime.Now.ToString("yyyymmddhhmmss");
             string listUrl = url + "files.txt?v=" + random;
-            Debug.LogWarning("LoadUpdate---->>>" + listUrl);
+            Debugger.LogWarning("LoadUpdate---->>>" + listUrl);
 
             WWW www = new WWW(listUrl); yield return www;
             if (www.error != null) {
@@ -176,17 +194,11 @@ namespace SimpleFramework.Manager {
                     if (canUpdate) File.Delete(localfile);
                 }
                 if (canUpdate) {   //本地缺少文件
-                    Debug.Log(fileUrl);
+                    Debugger.Log(fileUrl);
                     message = "downloading>>" + fileUrl;
-                    facade.SendMessageCommand(NotiConst.UPDATE_MESSAGE, message);
-                    /*
-                    www = new WWW(fileUrl); yield return www;
-                    if (www.error != null) {
-                        OnUpdateFailed(path);   //
-                        yield break;
-                    }
-                    File.WriteAllBytes(localfile, www.bytes);
-                     * */
+                    Debugger.Log(message);
+                    // facade.SendMessageCommand(NotiConst.UPDATE_MESSAGE, message);
+                   
                     //这里都是资源文件，用线程下载
                     BeginDownload(fileUrl, localfile);
                     while (!(IsDownOK(localfile))) { yield return new WaitForEndOfFrame(); }
@@ -194,9 +206,10 @@ namespace SimpleFramework.Manager {
             }
             yield return new WaitForEndOfFrame();
             message = "更新完成!!";
-            facade.SendMessageCommand(NotiConst.UPDATE_MESSAGE, message);
+            Debugger.Log(message);
+            // facade.SendMessageCommand(NotiConst.UPDATE_MESSAGE, message);
 
-            ResManager.initialize(OnResourceInited);
+            ioo.ResourceManager.initialize(OnResourceInited);
         }
 
         /// <summary>
@@ -215,7 +228,7 @@ namespace SimpleFramework.Manager {
             ThreadEvent ev = new ThreadEvent();
             ev.Key = NotiConst.UPDATE_DOWNLOAD;
             ev.evParams.AddRange(param);
-            ThreadManager.AddEvent(ev, OnThreadCompleted);   //线程下载
+            ioo.ThreadManager.AddEvent(ev, OnThreadCompleted);   //线程下载
         }
 
         /// <summary>
@@ -240,11 +253,11 @@ namespace SimpleFramework.Manager {
             LuaManager.Start();
             LuaManager.DoFile("Logic/Network");       //加载网络
             LuaManager.DoFile("Logic/GameManager");    //加载游戏
-            initialize = true;                     //初始化完 
+            // initialize = true;                     //初始化完 
 
-            NetManager.OnInit();    //初始化网络
+            ioo.NetworkManager.OnInit();    //初始化网络
 
-            object[] panels = CallMethod("LuaScriptPanel");  
+            object[] panels = LuaManager.CallLuaFunction("GameManager.LuaScriptPanel");  
             //---------------------Lua面板---------------------------
             foreach (object o in panels) {
                 string name = o.ToString().Trim();
@@ -252,31 +265,34 @@ namespace SimpleFramework.Manager {
                 name += "Panel";    //添加
 
                 LuaManager.DoFile("View/" + name);
-                Debug.LogWarning("LoadLua---->>>>" + name + ".lua");
+                Debugger.LogWarning("LoadLua---->>>>" + name + ".lua");
             }
             //------------------------------------------------------------
-            CallMethod("OnInitOK");   //初始化完成
+            LuaManager.CallLuaFunction("GameManager.OnInitOK");   //初始化完成
         }
 
         void OnUpdateFailed(string file) {
             string message = "更新失败!>" + file;
-            facade.SendMessageCommand(NotiConst.UPDATE_MESSAGE, message);
+            Debugger.LogError(message);
+            // facade.SendMessageCommand(NotiConst.UPDATE_MESSAGE, message);
         }
+/**
+        **/
 
         void Update() {
-            if (LuaManager != null && initialize) {
+            if (LuaManager != null) {
                 LuaManager.Update();
             }
         }
 
         void LateUpdate() {
-            if (LuaManager != null && initialize) {
+            if (LuaManager != null) {
                 LuaManager.LateUpate();
             }
         }
 
         void FixedUpdate() {
-            if (LuaManager != null && initialize) {
+            if (LuaManager != null) {
                 LuaManager.FixedUpdate();
             }
         }
@@ -285,13 +301,11 @@ namespace SimpleFramework.Manager {
         /// 析构函数
         /// </summary>
         void OnDestroy() {
-            if (NetManager != null) {
-                NetManager.Unload();
-            }
-            if (LuaManager != null) {
-                LuaManager.Destroy();
-            }
-            Debug.Log("~GameManager was destroyed");
+            // if (NetManager != null) {
+            //     NetManager.Unload();
+            // }
+            LuaManager.Destroy();
+            Debugger.Log("~GameManager was destroyed");
         }
     }
 }

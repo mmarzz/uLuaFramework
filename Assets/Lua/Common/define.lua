@@ -12,14 +12,15 @@ ProtocalType = {
 	SPROTO = 3,
 }
 --当前使用的协议类型--
-TestProtoType = ProtocalType.BINARY;
+TestProtoType = ProtocalType.BINARY
 
-Util = SimpleFramework.Util;
-AppConst = SimpleFramework.AppConst;
-LuaHelper = SimpleFramework.LuaHelper;
-ByteBuffer = SimpleFramework.ByteBuffer;
+Util = SimpleFramework.Util
+AppConst = SimpleFramework.AppConst
+LuaHelper = SimpleFramework.LuaHelper
+ByteBuffer = SimpleFramework.ByteBuffer
 
-ResManager = LuaHelper.GetResManager();
-NetManager = LuaHelper.GetNetManager();
-PanelManager = LuaHelper.GetPanelManager();
-MusicManager = LuaHelper.GetMusicManager();
+ioo = SimpleFramework.Utils.ioo
+ResManager = ioo.ResourceManager
+NetManager = ioo.NetworkManager
+PanelManager = ioo.PanelManager
+MusicManager = ioo.MusicManager

@@ -18,7 +18,7 @@ namespace SimpleFramework {
         /// 否则就需要自己将StreamingAssets里面的所有内容
         /// 复制到自己的Webserver上面，并修改下面的WebUrl。
         /// </summary>
-        public const bool UpdateMode = true;                       //更新模式-默认关闭 
+        public const bool UpdateMode = false;                       //更新模式-默认关闭 
         public const bool AutoWrapMode = true;                      //自动添加Wrap模式
 
         public const bool UsePbc = true;                           //PBC

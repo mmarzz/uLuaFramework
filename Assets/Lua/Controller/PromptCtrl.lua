@@ -18,7 +18,6 @@ local gameObject;
 --构建函数--
 function PromptCtrl.New()
 	logWarn("PromptCtrl.New--->>");
-    logError("未更新！！！！")
 	return this;
 end
 

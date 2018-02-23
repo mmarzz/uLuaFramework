@@ -17,6 +17,8 @@ namespace LuaInterface
     using UnityEngine;
     using SimpleFramework;
 
+    using SimpleFramework.Utils;
+
     public class LuaState : IDisposable
     {
         public IntPtr L;

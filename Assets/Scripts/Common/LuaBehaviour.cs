@@ -4,8 +4,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
+using SimpleFramework.Utils;
+
 namespace SimpleFramework {
-    public class LuaBehaviour : View {
+    public class LuaBehaviour : MonoBehaviour {
         protected static bool initialize = false;
 
         private string data = null;
@@ -17,11 +19,9 @@ namespace SimpleFramework {
         }
 
         protected void Start() {
-            if (LuaManager != null && initialize) {
-                LuaState l = LuaManager.lua;
-                l[name + ".transform"] = transform;
-                l[name + ".gameObject"] = gameObject;
-            }
+            LuaState luaState = ioo.LuaManager.lua;
+            luaState[string.Format("{0}.transform", name)] = transform;
+            luaState[string.Format("{0}.gameObject", name)] = gameObject;
             CallMethod("Start");
         }
 
@@ -89,7 +89,7 @@ namespace SimpleFramework {
                 bundle = null;  //销毁素材
             }
             ClearClick();
-            LuaManager = null;
+            // LuaManager = null;
             Util.ClearMemory();
             Debug.Log("~" + name + " was destroy!");
         }
