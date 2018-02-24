@@ -39,7 +39,7 @@ function functor(func, obj)
 		local flag 	= true	
 		local msg = nil	
 
-        if SimpleFramework.Util.isApplePlatform then
+        if Util.isApplePlatform then
             local args = {...}
 		
 		    if nil == self.obj then

@@ -13,14 +13,15 @@ public class SimpleFramework_Utils_iooWrap
 
 		LuaField[] fields = new LuaField[]
 		{
-			new LuaField("manager", get_manager, null),
+			new LuaField("Manager", get_Manager, null),
 			new LuaField("GameManager", get_GameManager, null),
 			new LuaField("LuaManager", get_LuaManager, null),
 			new LuaField("ResourceManager", get_ResourceManager, null),
 			new LuaField("NetworkManager", get_NetworkManager, null),
 			new LuaField("MusicManager", get_MusicManager, null),
-			new LuaField("TimerManger", get_TimerManger, null),
+			new LuaField("TimerManager", get_TimerManager, null),
 			new LuaField("ThreadManager", get_ThreadManager, null),
+			new LuaField("PanelManager", get_PanelManager, null),
 		};
 
 		LuaScriptMgr.RegisterLib(L, "SimpleFramework.Utils.ioo", typeof(SimpleFramework.Utils.ioo), regs, fields, typeof(object));
@@ -55,9 +56,9 @@ public class SimpleFramework_Utils_iooWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int get_manager(IntPtr L)
+	static int get_Manager(IntPtr L)
 	{
-		LuaScriptMgr.Push(L, SimpleFramework.Utils.ioo.manager);
+		LuaScriptMgr.Push(L, SimpleFramework.Utils.ioo.Manager);
 		return 1;
 	}
 
@@ -97,9 +98,9 @@ public class SimpleFramework_Utils_iooWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int get_TimerManger(IntPtr L)
+	static int get_TimerManager(IntPtr L)
 	{
-		LuaScriptMgr.Push(L, SimpleFramework.Utils.ioo.TimerManger);
+		LuaScriptMgr.Push(L, SimpleFramework.Utils.ioo.TimerManager);
 		return 1;
 	}
 
@@ -107,6 +108,13 @@ public class SimpleFramework_Utils_iooWrap
 	static int get_ThreadManager(IntPtr L)
 	{
 		LuaScriptMgr.Push(L, SimpleFramework.Utils.ioo.ThreadManager);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_PanelManager(IntPtr L)
+	{
+		LuaScriptMgr.Push(L, SimpleFramework.Utils.ioo.PanelManager);
 		return 1;
 	}
 }

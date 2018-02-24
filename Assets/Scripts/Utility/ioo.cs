@@ -8,21 +8,21 @@ using SimpleFramework.Manager;
 namespace SimpleFramework.Utils {
     public class ioo {
         
-        private static GameObject m_manager = null;
-        public static GameObject manager {
+        private static GameObject m_Manager = null;
+        public static GameObject Manager {
             get { 
-                if (m_manager == null)
-                    m_manager = GameObject.Find("GameManager");
-                return m_manager;
+                if (m_Manager == null)
+                    m_Manager = GameObject.Find("GameManager");
+                return m_Manager;
             }
         }
 
-        private static GameManager m_gameManager = null;
+        private static GameManager m_GameManager = null;
         public static GameManager GameManager {
             get {
-                if (m_gameManager == null && manager != null)
-                    m_gameManager = manager.GetComponent<GameManager> ();
-                return m_gameManager;
+                if (m_GameManager == null && Manager != null)
+                    m_GameManager = Manager.GetComponent<GameManager> ();
+                return m_GameManager;
             }
         }
 
@@ -34,53 +34,63 @@ namespace SimpleFramework.Utils {
             }
         }
 
-        private static ResourceManager m_ResMgr;
+        private static ResourceManager m_ResourceManager;
         public static ResourceManager ResourceManager {
             get {
-                if (m_ResMgr == null) {
-                    m_ResMgr = manager.GetComponent<ResourceManager>();
+                if (m_ResourceManager == null) {
+                    m_ResourceManager = Manager.GetComponent<ResourceManager>();
                 }
-                return m_ResMgr;
+                return m_ResourceManager;
             }
         }
 
-        private static NetworkManager m_NetMgr;
+        private static NetworkManager m_NetworkManager;
         public static NetworkManager NetworkManager {
             get {
-                if (m_NetMgr == null) {
-                    m_NetMgr = manager.GetComponent<NetworkManager>();
+                if (m_NetworkManager == null) {
+                    m_NetworkManager = Manager.GetComponent<NetworkManager>();
                 }
-                return m_NetMgr;
+                return m_NetworkManager;
             }
         }
 
-        private static MusicManager m_MusicMgr;
+        private static MusicManager m_MusicManager;
         public static MusicManager MusicManager {
             get {
-                if (m_MusicMgr == null) {
-                    m_MusicMgr = manager.GetComponent<MusicManager>();
+                if (m_MusicManager == null) {
+                    m_MusicManager = Manager.GetComponent<MusicManager>();
                 }
-                return m_MusicMgr;
+                return m_MusicManager;
             }
         }
 
-        private static TimerManager m_TimerMgr;
-        public static TimerManager TimerManger {
+        private static TimerManager m_TimerManager;
+        public static TimerManager TimerManager {
             get {
-                if (m_TimerMgr == null) {
-                    m_TimerMgr = manager.GetComponent<TimerManager>();
+                if (m_TimerManager == null) {
+                    m_TimerManager = Manager.GetComponent<TimerManager>();
                 }
-                return m_TimerMgr;
+                return m_TimerManager;
             }
         }
 
-        private static ThreadManager m_ThreadMgr;
+        private static ThreadManager m_ThreadManager;
         public static ThreadManager ThreadManager {
             get {
-                if (m_ThreadMgr == null) {
-                    m_ThreadMgr = manager.GetComponent<ThreadManager>();
+                if (m_ThreadManager == null) {
+                    m_ThreadManager = Manager.GetComponent<ThreadManager>();
                 }
-                return m_ThreadMgr;
+                return m_ThreadManager;
+            }
+        }
+
+        private static PanelManager m_PanelManager;
+        public static PanelManager PanelManager {
+            get {
+                if (m_PanelManager == null) {
+                    m_PanelManager = Manager.GetComponent<PanelManager>();
+                }
+                return m_PanelManager;
             }
         }
     }

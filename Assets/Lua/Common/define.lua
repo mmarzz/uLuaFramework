@@ -14,7 +14,7 @@ ProtocalType = {
 --当前使用的协议类型--
 TestProtoType = ProtocalType.BINARY
 
-Util = SimpleFramework.Util
+Util = SimpleFramework.Utils.Util
 AppConst = SimpleFramework.AppConst
 LuaHelper = SimpleFramework.LuaHelper
 ByteBuffer = SimpleFramework.ByteBuffer
