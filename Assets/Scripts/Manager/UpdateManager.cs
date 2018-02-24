@@ -1,6 +1,8 @@
 using UnityEngine;
-using System.Collections;
+using UnityEngine.Networking;
 using System.Collections.Generic;
+using System.Collections;
+using System.Text;
 using System.IO;
 using System;
 
@@ -26,7 +28,9 @@ namespace SimpleFramework.Manager {
             
             // TODO
             // StartCoroutine(OnUpdateResource());
-            OnResourceInited();
+
+           	CheckUpdateFileCount();
+            // OnResourceInited();
         }
 
         IEnumerator ExtractResource() {
@@ -35,22 +39,82 @@ namespace SimpleFramework.Manager {
 
             FileUtil.ExistOrClearDirectory(destPath);
 
-            // string srcFile = srcPath + BundleUtil.FileName;
-            // string destFile = destPath + BundleUtil.FileName;
-
-            Debugger.LogWarning("正在解包文件");
+            Debugger.LogWarning("Extract --->");
 
             FileUtil.CopyDirectory(srcPath, destPath);
 
-            Debugger.LogWarning("解包完成!");
+            Debugger.LogWarning("<--- Extract completed!");
 
             yield return null;
         }
 
-/**
         /// <summary>
-        /// 启动更新下载，这里只是个思路演示，此处可启动线程下载更新
+        ///	检查需要更新的文件数量
         /// </summary>
+        public int CheckUpdateFileCount() {
+        	if (!AppConst.UpdateMode)
+        		return -1;
+
+        	string fileUrl = AppConst.WebUrl + BundleUtil.FileName;
+
+        	Debugger.LogWarning("Load Update --->" + fileUrl);
+
+        	WWWLoadBytesAsync(fileUrl, 100, (bytes) => {
+
+        		string localFilePath = BundleUtil.UpdateDataPath + BundleUtil.FileName;
+
+        		string svrFlie = Encoding.UTF8.GetString(bytes);
+        
+        		Hashtable svrFlieTable = LoadFileStringToTable(svrFlie);
+        		// Debugger.LogWarning(svrFlieTable.ToString());
+
+        		WWW www = new WWW(localFilePath);
+        		string localFile = www.text;
+				Debugger.LogWarning(localFile);
+        	});
+        	
+        	return 0;
+        }
+
+        private void WWWLoadBytesAsync(string path, int timeout, UIEventListener.CallbackBytes cb) {
+        	ioo.GameManager.StartCoroutine(_WWWLoadBytesAsync(path, timeout, cb));
+        }
+
+        private IEnumerator _WWWLoadBytesAsync(string path, int timeout, UIEventListener.CallbackBytes cb) {
+        	byte[] bytes = null;
+
+        	using (UnityWebRequest www = UnityWebRequest.Get(path)) {
+				www.timeout = timeout; 
+	            yield return www.Send();
+
+	            while (!www.isDone && string.IsNullOrEmpty(www.error))
+					yield return null;
+
+				if (www.isError) {  
+	                Debugger.LogError(www.error);  
+	            } else {
+	            	bytes = www.downloadHandler.data;
+	            }
+	        }
+
+	        if (cb != null)
+	        	cb(bytes);
+        }
+
+        private Hashtable LoadFileStringToTable(string content) {
+        	string[] files = content.Split('\n');
+        	Hashtable table = new Hashtable();
+        	foreach (string file in files) {
+        		if (string.IsNullOrEmpty(file)) 
+        			continue;
+        		string[] keyValue = file.Split('|');
+        		table.Add(keyValue[0], keyValue[1]);
+        	}
+        	return table;
+        }
+
+/**
+
         IEnumerator OnUpdateResource() {
             downloadFiles.Clear();
 

@@ -396,7 +396,7 @@ namespace SimpleFramework.Utils {
                 AddLuaPath(path + "lua/");
             }
             path = SearchLuaPath(name + ".lua");
-            Debugger.LogWarning("----------------------" + path);
+            // Debugger.LogWarning("----------------------" + path);
             return path;
         }
 
