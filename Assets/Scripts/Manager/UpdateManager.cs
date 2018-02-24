@@ -14,86 +14,37 @@ namespace SimpleFramework.Manager {
         /// <summary>
         /// 释放资源
         /// </summary>
-        public void CheckExtractResource() {
+        public void Init() {
 
-        	Debugger.LogWarning("Application.persistentDataPath:" + Application.persistentDataPath);
-        	Debugger.LogWarning("Application.streamingAssetsPath:" + Application.streamingAssetsPath);
-        	Debugger.LogWarning("Application.dataPath:" + Application.dataPath);
+        	// Debugger.LogWarning("Application.persistentDataPath:" + Application.persistentDataPath);
+        	// Debugger.LogWarning("Application.streamingAssetsPath:" + Application.streamingAssetsPath);
+        	// Debugger.LogWarning("Application.dataPath:" + Application.dataPath);
 
-            bool isExists = Directory.Exists(BundleUtil.UpdateDataPath) &&
-              Directory.Exists(BundleUtil.UpdateDataPath + "lua/") && File.Exists(BundleUtil.UpdateDataPath + "files.txt");
-            if (isExists || AppConst.DebugMode) {
-                // StartCoroutine(OnUpdateResource());
-                return;   //文件已经解压过了，自己可添加检查文件列表逻辑
-            }
-            StartCoroutine(ExtractResource());    //启动释放协成 
+            bool isExists = Directory.Exists(BundleUtil.UpdateDataPath) && File.Exists(BundleUtil.UpdateDataPath + BundleUtil.FileName);
+            if (!AppConst.DebugMode && !isExists) 
+           		StartCoroutine(ExtractResource());
+            
+            // TODO
+            // StartCoroutine(OnUpdateResource());
+            OnResourceInited();
         }
 
         IEnumerator ExtractResource() {
-            string dataPath = BundleUtil.UpdateDataPath;  // target 下载数据目录
-            string resPath = BundleUtil.StreamingDataPath; // source 游戏包资源目录
+            string destPath = BundleUtil.UpdateDataPath;  // destination 下载数据目录
+            string srcPath = BundleUtil.StreamingDataPath; // source 游戏包资源目录
 
-            if (Directory.Exists(dataPath)) Directory.Delete(dataPath, true);
-            Directory.CreateDirectory(dataPath);
+            FileUtil.ExistOrClearDirectory(destPath);
 
-            string infile = resPath + "files.txt";
-            string outfile = dataPath + "files.txt";
-            if (File.Exists(outfile)) File.Delete(outfile);
+            // string srcFile = srcPath + BundleUtil.FileName;
+            // string destFile = destPath + BundleUtil.FileName;
 
-            string message = "正在解包文件:>files.txt";
-            Debugger.Log(message);
-            // facade.SendMessageCommand(NotiConst.UPDATE_MESSAGE, message);
+            Debugger.LogWarning("正在解包文件");
 
-            if (Application.platform == RuntimePlatform.Android) {
-                WWW www = new WWW(infile);
-                yield return www;
+            FileUtil.CopyDirectory(srcPath, destPath);
 
-                if (www.isDone) {
-                    File.WriteAllBytes(outfile, www.bytes);
-                }
-                yield return 0;
-            } else File.Copy(infile, outfile, true);
-            yield return new WaitForEndOfFrame();
+            Debugger.LogWarning("解包完成!");
 
-            //释放所有文件到数据目录
-            string[] files = File.ReadAllLines(outfile);
-            foreach (var file in files) {
-                string[] fs = file.Split('|');
-                infile = resPath + fs[0];  //
-                outfile = dataPath + fs[0];
-
-                message = "正在解包文件:>" + fs[0];
-                Debugger.Log("正在解包文件:>" + infile);
-                // facade.SendMessageCommand(NotiConst.UPDATE_MESSAGE, message);
-
-                string dir = Path.GetDirectoryName(outfile);
-                if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
-
-                if (Application.platform == RuntimePlatform.Android) {
-                    WWW www = new WWW(infile);
-                    yield return www;
-
-                    if (www.isDone) {
-                        File.WriteAllBytes(outfile, www.bytes);
-                    }
-                    yield return 0;
-                } else {
-                    if (File.Exists(outfile)) {
-                        File.Delete(outfile);
-                    }
-                    File.Copy(infile, outfile, true);
-                }
-                yield return new WaitForEndOfFrame();
-            }
-            message = "解包完成!!!";
-            Debugger.LogWarning(message);
-            // facade.SendMessageCommand(NotiConst.UPDATE_MESSAGE, message);
-
-            yield return new WaitForSeconds(0.1f);
-            message = string.Empty;
-
-            //释放完成，开始启动更新资源 todo
-            // StartCoroutine(OnUpdateResource());
+            yield return null;
         }
 
 /**
@@ -207,7 +158,7 @@ namespace SimpleFramework.Manager {
             ioo.LuaManager.DoFile("Logic/GameManager");    //加载游戏
             // initialize = true;                     //初始化完 
 
-            ioo.NetworkManager.OnInit();    //初始化网络
+            // ioo.NetworkManager.OnInit();    //初始化网络
 
             object[] panels = ioo.LuaManager.CallLuaFunction("GameManager.LuaScriptPanel");  
             //---------------------Lua面板---------------------------

@@ -43,13 +43,13 @@ function GameManager.OnInitOK()
     AppConst.SocketAddress = "127.0.0.1";
     NetManager:SendConnect();
 
-    this.test_class_func();
-    this.test_pblua_func();
-    this.test_cjson_func();
-    this.test_pbc_func();
-    this.test_lpeg_func();
-    this.test_sproto_func();
-    coroutine.start(this.test_coroutine);
+    -- this.test_class_func();
+    -- this.test_pblua_func();
+    -- this.test_cjson_func();
+    -- this.test_pbc_func();
+    -- this.test_lpeg_func();
+    -- this.test_sproto_func();
+    -- coroutine.start(this.test_coroutine);
 
     CtrlManager.Init();
     local ctrl = CtrlManager.GetCtrl(CtrlName.Prompt);
@@ -165,7 +165,7 @@ end
 
 --测试pbc--
 function GameManager.test_pbc_func()
-    local path = Util.DataPath.."lua/3rd/pbc/addressbook.pb";
+    local path = BundleUtil.UpdateDataPath.."lua/3rd/pbc/addressbook.pb";
     log('io.open--->>>'..path);
 
     local addr = io.open(path, "rb")
@@ -187,7 +187,7 @@ end
 
 --pbc callback--
 function GameManager.OnPbcCall(data)
-    local path = Util.DataPath.."lua/3rd/pbc/addressbook.pb";
+    local path = BundleUtil.UpdateDataPath.."lua/3rd/pbc/addressbook.pb";
 
     local addr = io.open(path, "rb")
     local buffer = addr:read "*a"
@@ -204,7 +204,7 @@ end
 
 --测试cjson--
 function GameManager.test_cjson_func()
-    local path = Util.DataPath.."lua/3rd/cjson/example2.json";
+    local path = BundleUtil.UpdateDataPath.."lua/3rd/cjson/example2.json";
     local text = util.file_load(path);
     LuaHelper.OnJsonCallFunc(text, this.OnJsonCall);
 end

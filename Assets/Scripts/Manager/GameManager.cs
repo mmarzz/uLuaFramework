@@ -41,7 +41,7 @@ namespace SimpleFramework.Manager {
             InitManagers();
             
 
-            ioo.UpdateManager.CheckExtractResource(); //释放资源
+            ioo.UpdateManager.Init(); //释放资源
             
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
             Application.targetFrameRate = AppConst.GameFrameRate;

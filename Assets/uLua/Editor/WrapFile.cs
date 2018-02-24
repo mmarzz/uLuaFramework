@@ -23,6 +23,7 @@ public static class WrapFile {
         //custom    
 		_GT(typeof(ioo)),
         _GT(typeof(Util)),
+        _GT(typeof(BundleUtil)),
 		_GT(typeof(AppConst)),
 		_GT(typeof(ByteBuffer)),
         _GT(typeof(NetworkManager)),

@@ -450,11 +450,11 @@ namespace SimpleFramework.Utils {
         }
 
         public static GameObject LoadAsset(AssetBundle bundle, string name) {
-#if UNITY_5
+// #if UNITY_5
         return bundle.LoadAsset(name, typeof(GameObject)) as GameObject;
-#else
-            return bundle.Load(name, typeof(GameObject)) as GameObject;
-#endif
+// #else
+//             return bundle.Load(name, typeof(GameObject)) as GameObject;
+// #endif
         }
 
         public static Component AddComponent(GameObject go, string assembly, string classname) {
