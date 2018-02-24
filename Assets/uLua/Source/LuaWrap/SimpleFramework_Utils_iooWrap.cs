@@ -16,6 +16,7 @@ public class SimpleFramework_Utils_iooWrap
 			new LuaField("Manager", get_Manager, null),
 			new LuaField("GameManager", get_GameManager, null),
 			new LuaField("LuaManager", get_LuaManager, null),
+			new LuaField("UpdateManager", get_UpdateManager, null),
 			new LuaField("ResourceManager", get_ResourceManager, null),
 			new LuaField("NetworkManager", get_NetworkManager, null),
 			new LuaField("MusicManager", get_MusicManager, null),
@@ -73,6 +74,13 @@ public class SimpleFramework_Utils_iooWrap
 	static int get_LuaManager(IntPtr L)
 	{
 		LuaScriptMgr.PushObject(L, SimpleFramework.Utils.ioo.LuaManager);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_UpdateManager(IntPtr L)
+	{
+		LuaScriptMgr.Push(L, SimpleFramework.Utils.ioo.UpdateManager);
 		return 1;
 	}
 

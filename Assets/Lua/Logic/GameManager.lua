@@ -58,6 +58,7 @@ function GameManager.OnInitOK()
     end
        
     logWarn('SimpleFramework InitOK--->>>');
+    logWarn('-------------lua文件 不是bytes');
 end
 
 --测试协同--

@@ -16,6 +16,11 @@ using UnityEditor;
 
 namespace SimpleFramework.Utils {
     public class Util {
+
+        public static string PersistentDataPath { get { return Application.persistentDataPath + "/"; } }
+        public static string UpdateDataPath { get { return Application.persistentDataPath + "/update/data/"; } }
+        public static string UpdateCachePath { get { return Application.persistentDataPath + "/update/cache/"; } }
+
         private static List<string> luaPaths = new List<string>();
 
         public static int Int(object o) {
@@ -373,27 +378,6 @@ namespace SimpleFramework.Utils {
                 LuaInterface.LuaFunction func = (LuaInterface.LuaFunction)luafuc;
                 func.Call();
             };
-        }
-
-        /// <summary>
-        /// 是否是登录场景
-        /// </summary>
-        public static bool isLogin {
-            get { return Application.loadedLevelName.CompareTo("login") == 0; }
-        }
-
-        /// <summary>
-        /// 是否是城镇场景
-        /// </summary>
-        public static bool isMain {
-            get { return Application.loadedLevelName.CompareTo("main") == 0; }
-        }
-
-        /// <summary>
-        /// 判断是否是战斗场景
-        /// </summary>
-        public static bool isFight {
-            get { return Application.loadedLevelName.CompareTo("fight") == 0; }
         }
 
         /// <summary>

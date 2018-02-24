@@ -54,12 +54,12 @@ public class SimpleFramework_Utils_UtilWrap
 
 		LuaField[] fields = new LuaField[]
 		{
+			new LuaField("PersistentDataPath", get_PersistentDataPath, null),
+			new LuaField("UpdateDataPath", get_UpdateDataPath, null),
+			new LuaField("UpdateCachePath", get_UpdateCachePath, null),
 			new LuaField("DataPath", get_DataPath, null),
 			new LuaField("NetAvailable", get_NetAvailable, null),
 			new LuaField("IsWifi", get_IsWifi, null),
-			new LuaField("isLogin", get_isLogin, null),
-			new LuaField("isMain", get_isMain, null),
-			new LuaField("isFight", get_isFight, null),
 			new LuaField("isApplePlatform", get_isApplePlatform, null),
 		};
 
@@ -95,6 +95,27 @@ public class SimpleFramework_Utils_UtilWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_PersistentDataPath(IntPtr L)
+	{
+		LuaScriptMgr.Push(L, SimpleFramework.Utils.Util.PersistentDataPath);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_UpdateDataPath(IntPtr L)
+	{
+		LuaScriptMgr.Push(L, SimpleFramework.Utils.Util.UpdateDataPath);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_UpdateCachePath(IntPtr L)
+	{
+		LuaScriptMgr.Push(L, SimpleFramework.Utils.Util.UpdateCachePath);
+		return 1;
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int get_DataPath(IntPtr L)
 	{
 		LuaScriptMgr.Push(L, SimpleFramework.Utils.Util.DataPath);
@@ -112,27 +133,6 @@ public class SimpleFramework_Utils_UtilWrap
 	static int get_IsWifi(IntPtr L)
 	{
 		LuaScriptMgr.Push(L, SimpleFramework.Utils.Util.IsWifi);
-		return 1;
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int get_isLogin(IntPtr L)
-	{
-		LuaScriptMgr.Push(L, SimpleFramework.Utils.Util.isLogin);
-		return 1;
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int get_isMain(IntPtr L)
-	{
-		LuaScriptMgr.Push(L, SimpleFramework.Utils.Util.isMain);
-		return 1;
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int get_isFight(IntPtr L)
-	{
-		LuaScriptMgr.Push(L, SimpleFramework.Utils.Util.isFight);
 		return 1;
 	}
 

@@ -34,6 +34,16 @@ namespace SimpleFramework.Utils {
             }
         }
 
+        private static UpdateManager m_UpdateManager;
+        public static UpdateManager UpdateManager {
+            get {
+                if (m_UpdateManager == null) {
+                    m_UpdateManager = Manager.GetComponent<UpdateManager>();
+                }
+                return m_UpdateManager;
+            }
+        }
+
         private static ResourceManager m_ResourceManager;
         public static ResourceManager ResourceManager {
             get {
