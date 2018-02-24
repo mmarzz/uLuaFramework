@@ -34,7 +34,6 @@ public class SimpleFramework_Utils_UtilWrap
 			new LuaMethod("ClearMemory", ClearMemory),
 			new LuaMethod("IsNumber", IsNumber),
 			new LuaMethod("GetFileText", GetFileText),
-			new LuaMethod("AppContentPath", AppContentPath),
 			new LuaMethod("AddClick", AddClick),
 			new LuaMethod("LuaPath", LuaPath),
 			new LuaMethod("SearchLuaPath", SearchLuaPath),
@@ -57,7 +56,6 @@ public class SimpleFramework_Utils_UtilWrap
 			new LuaField("PersistentDataPath", get_PersistentDataPath, null),
 			new LuaField("UpdateDataPath", get_UpdateDataPath, null),
 			new LuaField("UpdateCachePath", get_UpdateCachePath, null),
-			new LuaField("DataPath", get_DataPath, null),
 			new LuaField("NetAvailable", get_NetAvailable, null),
 			new LuaField("IsWifi", get_IsWifi, null),
 			new LuaField("isApplePlatform", get_isApplePlatform, null),
@@ -112,13 +110,6 @@ public class SimpleFramework_Utils_UtilWrap
 	static int get_UpdateCachePath(IntPtr L)
 	{
 		LuaScriptMgr.Push(L, SimpleFramework.Utils.Util.UpdateCachePath);
-		return 1;
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int get_DataPath(IntPtr L)
-	{
-		LuaScriptMgr.Push(L, SimpleFramework.Utils.Util.DataPath);
 		return 1;
 	}
 
@@ -449,15 +440,6 @@ public class SimpleFramework_Utils_UtilWrap
 		LuaScriptMgr.CheckArgsCount(L, 1);
 		string arg0 = LuaScriptMgr.GetLuaString(L, 1);
 		string o = SimpleFramework.Utils.Util.GetFileText(arg0);
-		LuaScriptMgr.Push(L, o);
-		return 1;
-	}
-
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int AppContentPath(IntPtr L)
-	{
-		LuaScriptMgr.CheckArgsCount(L, 0);
-		string o = SimpleFramework.Utils.Util.AppContentPath();
 		LuaScriptMgr.Push(L, o);
 		return 1;
 	}

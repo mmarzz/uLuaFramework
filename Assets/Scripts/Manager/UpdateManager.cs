@@ -20,18 +20,18 @@ namespace SimpleFramework.Manager {
         	Debugger.LogWarning("Application.streamingAssetsPath:" + Application.streamingAssetsPath);
         	Debugger.LogWarning("Application.dataPath:" + Application.dataPath);
 
-            bool isExists = Directory.Exists(Util.DataPath) &&
-              Directory.Exists(Util.DataPath + "lua/") && File.Exists(Util.DataPath + "files.txt");
+            bool isExists = Directory.Exists(BundleUtil.UpdateDataPath) &&
+              Directory.Exists(BundleUtil.UpdateDataPath + "lua/") && File.Exists(BundleUtil.UpdateDataPath + "files.txt");
             if (isExists || AppConst.DebugMode) {
-                StartCoroutine(OnUpdateResource());
+                // StartCoroutine(OnUpdateResource());
                 return;   //文件已经解压过了，自己可添加检查文件列表逻辑
             }
-            StartCoroutine(OnExtractResource());    //启动释放协成 
+            StartCoroutine(ExtractResource());    //启动释放协成 
         }
 
-        IEnumerator OnExtractResource() {
-            string dataPath = Util.DataPath;  //数据目录
-            string resPath = Util.AppContentPath(); //游戏包资源目录
+        IEnumerator ExtractResource() {
+            string dataPath = BundleUtil.UpdateDataPath;  // target 下载数据目录
+            string resPath = BundleUtil.StreamingDataPath; // source 游戏包资源目录
 
             if (Directory.Exists(dataPath)) Directory.Delete(dataPath, true);
             Directory.CreateDirectory(dataPath);
@@ -92,10 +92,11 @@ namespace SimpleFramework.Manager {
             yield return new WaitForSeconds(0.1f);
             message = string.Empty;
 
-            //释放完成，开始启动更新资源
-            StartCoroutine(OnUpdateResource());
+            //释放完成，开始启动更新资源 todo
+            // StartCoroutine(OnUpdateResource());
         }
 
+/**
         /// <summary>
         /// 启动更新下载，这里只是个思路演示，此处可启动线程下载更新
         /// </summary>
@@ -106,7 +107,7 @@ namespace SimpleFramework.Manager {
                 ioo.ResourceManager.initialize(OnResourceInited);
                 yield break;
             }
-            string dataPath = Util.DataPath;  //数据目录
+            string dataPath = BundleUtil.UpdateDataPath;  // 下载数据目录
             string url = AppConst.WebUrl;
             string random = DateTime.Now.ToString("yyyymmddhhmmss");
             string listUrl = url + "files.txt?v=" + random;
@@ -195,7 +196,7 @@ namespace SimpleFramework.Manager {
                 break;
             }
         }
-
+**/
         /// <summary>
         /// 资源初始化结束
         /// </summary>

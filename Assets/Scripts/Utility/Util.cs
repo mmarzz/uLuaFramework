@@ -305,26 +305,6 @@ namespace SimpleFramework.Utils {
             return !regex.IsMatch(strNumber);
         }
 
-        /// <summary>
-        /// 取得数据存放目录
-        /// </summary>
-        public static string DataPath {
-            get {
-                string game = AppConst.AppName.ToLower();
-                if (Application.isMobilePlatform) {
-                    return Application.persistentDataPath + "/" + game + "/";
-                }
-                if (Application.platform == RuntimePlatform.WindowsPlayer) {
-                    return Application.streamingAssetsPath + "/";
-                }
-                if (AppConst.DebugMode) {
-                    if (Application.isEditor) {
-                        return Application.dataPath + "/StreamingAssets/";
-                    }
-                }
-                return "c:/" + game + "/";
-            }
-        }
 
         /// <summary>
         /// 取得行文本
@@ -351,24 +331,45 @@ namespace SimpleFramework.Utils {
             }
         }
 
-        /// <summary>
-        /// 应用程序内容路径
-        /// </summary>
-        public static string AppContentPath() {
-            string path = string.Empty;
-            switch (Application.platform) {
-                case RuntimePlatform.Android:
-                    path = "jar:file://" + Application.dataPath + "!/assets/";
-                break;
-                case RuntimePlatform.IPhonePlayer:
-                    path = Application.dataPath + "/Raw/";
-                break;
-                default:
-                    path = Application.dataPath + "/StreamingAssets/";
-                break;
-            }
-            return path;
-        }
+        // /// <summary>
+        // /// 应用程序内容路径
+        // /// </summary>
+        // public static string AppContentPath() {
+        //     string path = string.Empty;
+        //     switch (Application.platform) {
+        //         case RuntimePlatform.Android:
+        //             path = "jar:file://" + Application.dataPath + "!/assets/";
+        //         break;
+        //         case RuntimePlatform.IPhonePlayer:
+        //             path = Application.dataPath + "/Raw/";
+        //         break;
+        //         default:
+        //             path = Application.dataPath + "/StreamingAssets/";
+        //         break;
+        //     }
+        //     return path;
+        // }
+
+                // /// <summary>
+        // /// 取得数据存放目录
+        // /// </summary>
+        // public static string DataPath {
+        //     get {
+        //         string game = AppConst.AppName.ToLower();
+        //         if (Application.isMobilePlatform) {
+        //             return Application.persistentDataPath + "/" + game + "/";
+        //         }
+        //         if (Application.platform == RuntimePlatform.WindowsPlayer) {
+        //             return Application.streamingAssetsPath + "/";
+        //         }
+        //         if (AppConst.DebugMode) {
+        //             if (Application.isEditor) {
+        //                 return Application.dataPath + "/StreamingAssets/";
+        //             }
+        //         }
+        //         return "c:/" + game + "/";
+        //     }
+        // }
 
         /// <summary>
         /// 添加lua单机事件
@@ -384,7 +385,7 @@ namespace SimpleFramework.Utils {
         /// 取得Lua路径
         /// </summary>
         public static string LuaPath(string name) {
-            string path = AppConst.DebugMode ? Application.dataPath + "/" : DataPath;
+            string path = AppConst.DebugMode ? Application.dataPath + "/" : BundleUtil.UpdateDataPath;
             string lowerName = name.ToLower();
             if (lowerName.EndsWith(".lua")) {
                 int index = name.LastIndexOf('.');
@@ -395,6 +396,7 @@ namespace SimpleFramework.Utils {
                 AddLuaPath(path + "lua/");
             }
             path = SearchLuaPath(name + ".lua");
+            Debugger.LogWarning("----------------------" + path);
             return path;
         }
 

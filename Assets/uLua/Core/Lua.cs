@@ -289,6 +289,7 @@ namespace LuaInterface
 
             // Load with Unity3D resources            
             byte[] text = LuaStatic.Load(fileName);
+            // Debugger.LogWarning("---------------" + fileName);
             if (text == null)
             {
                 if (!fileName.Contains("mobdebug")) {

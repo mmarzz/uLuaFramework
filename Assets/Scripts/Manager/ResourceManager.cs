@@ -17,7 +17,7 @@ namespace SimpleFramework.Manager {
                 byte[] stream;
                 string uri = string.Empty;
                 //------------------------------------Shared--------------------------------------
-                uri = Util.DataPath + "shared.assetbundle";
+                uri = BundleUtil.UpdateDataPath + "shared.assetbundle";
                 Debug.LogWarning("LoadFile::>> " + uri);
 
                 stream = File.ReadAllBytes(uri);
@@ -37,7 +37,7 @@ namespace SimpleFramework.Manager {
         public AssetBundle LoadBundle(string name) {
             byte[] stream = null;
             AssetBundle bundle = null;
-            string uri = Util.DataPath + name.ToLower() + ".assetbundle";
+            string uri = BundleUtil.UpdateDataPath + name.ToLower() + ".assetbundle";
             stream = File.ReadAllBytes(uri);
             bundle = AssetBundle.LoadFromMemory(stream); //�������ݵ��زİ�
             return bundle;
