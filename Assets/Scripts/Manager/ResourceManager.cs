@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Text;
 using System.IO;
 using System;
 
@@ -32,11 +33,30 @@ namespace SimpleFramework.Manager {
         }
 
 
-        // public string LoadLua(string fileName) {
-        //     if (File.Exists(path)) {
-        //         str = File.ReadAllBytes(path);
-        //     }
-        // } 
+        public byte[] LoadLuaBytes(string luaName) {
+            string filePath;
+            if (string.IsNullOrEmpty(Path.GetExtension(luaName))) {
+                filePath = string.Format("lua/{0}.lua", luaName);
+            } else {
+                filePath = string.Format("lua/{0}", luaName);
+            }
+
+            filePath = filePath.ToLower();
+
+            if (AppConst.DebugMode) { // debug模式下读项目内 lua
+                filePath = Application.dataPath + "/" + filePath;
+            } else {
+                filePath = BundleUtil.UpdateDataPath + "/" + filePath;
+            }
+
+
+            byte[] bytes = null;
+            if (File.Exists(filePath)) {
+                bytes = File.ReadAllBytes(filePath);
+            }
+
+            return bytes;
+        } 
 
 
         /// <summary>

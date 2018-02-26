@@ -205,15 +205,17 @@ namespace LuaInterface
             // Load with Unity3D resources            
             //string text = LuaHelper.Load(fileName);
 
-            byte[] bt = null;
-            string path = Util.LuaPath(fileName);
+            // byte[] bt = null;
+            // string path = Util.LuaPath(fileName);
 
-            using (FileStream fs = new FileStream(path, FileMode.Open))
-            {
-                BinaryReader br = new BinaryReader(fs);
-                bt = br.ReadBytes((int)fs.Length);
-                fs.Close();
-            }
+            // using (FileStream fs = new FileStream(path, FileMode.Open))
+            // {
+            //     BinaryReader br = new BinaryReader(fs);
+            //     bt = br.ReadBytes((int)fs.Length);
+            //     fs.Close();
+            // }
+            byte[] bt = ioo.ResourceManager.LoadLuaBytes(fileName);
+            int len = LuaStatic.getBytesLength(bt);
 
 
             //if( text == null )
@@ -221,7 +223,7 @@ namespace LuaInterface
             //    ThrowExceptionFromError(oldTop);
             //}
 
-            if (LuaDLL.luaL_loadbuffer(L, bt, bt.Length, fileName) != 0)
+            if (LuaDLL.luaL_loadbuffer(L, bt, len, fileName) != 0)
             {
                 ThrowExceptionFromError(oldTop);
             }
@@ -301,7 +303,8 @@ namespace LuaInterface
 
             // string luafile = Util.LuaPath(fileName);
             //Encoding.UTF8.GetByteCount(text)
-            if (LuaDLL.luaL_loadbuffer(L, text, text.Length, fileName) == 0)
+            int len = LuaStatic.getBytesLength(text);
+            if (LuaDLL.luaL_loadbuffer(L, text, len, fileName) == 0)
             {
                 if (env != null)
                 {

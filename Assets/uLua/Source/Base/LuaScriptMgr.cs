@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Diagnostics;
 using System.Collections;
+
 using SimpleFramework;
 using SimpleFramework.Utils;
 
@@ -678,12 +679,13 @@ public class LuaScriptMgr
         fileList.Add(name);
 
 #if !LUA_ZIP
-        string path = Util.LuaPath(name); // TODO!!!
+        // string path = Util.LuaPath(name);
 
-        if (File.Exists(path))
-        {
-            str = File.ReadAllBytes(path);
-        }
+        // if (File.Exists(path))
+        // {
+        //     str = File.ReadAllBytes(path);
+        // }
+        str = ioo.ResourceManager.LoadLuaBytes(name);
 #else
         IAssetFile zipFile = null;
         int pos = name.IndexOf('/');        

@@ -198,6 +198,22 @@ namespace LuaInterface
             return 0;
         }
 
+        public static int getBytesLength(byte[] bytes) {
+            if (bytes == null)
+                return 0;
+
+            int len = bytes.Length;
+            int nullLen = 0;
+            for (int i = len-1; i>=0; i--) {
+                if (bytes[i] == 0)
+                    nullLen++;
+                else
+                    break;
+            }
+            len -= nullLen;
+            return len;
+        }
+
         public static string init_luanet =
             @"local metatable = {}
             local rawget = rawget
