@@ -41,18 +41,22 @@ namespace SimpleFramework.Manager {
             InitManagers();
             
 
-            ioo.UpdateManager.Init(); //释放资源
+            // ioo.UpdateManager.Init(); //释放资源
             
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
             Application.targetFrameRate = AppConst.GameFrameRate;
+
+            //
+            Test();
         }
 
 
         private void InitManagers() {
+            Util.Add<UpdateManager>(gameObject).Init();
+
             Util.Add<PanelManager>(gameObject);
             Util.Add<MusicManager>(gameObject);
             Util.Add<ResourceManager>(gameObject);
-            Util.Add<UpdateManager>(gameObject);
             // Util.Add<UIManager>(gameObject);
             Util.Add<TimerManager> (gameObject);
             Util.Add<NetworkManager> (gameObject);
@@ -68,6 +72,39 @@ namespace SimpleFramework.Manager {
         //     gui.name = name;
         // }
 
+        private void Test() {
+            ioo.UpdateManager.CheckUpdate();
+
+            OnResourceInited();
+        }
+
+          /// <summary>
+        /// 资源初始化结束
+        /// </summary>
+        public void OnResourceInited() {
+            // TODO
+            // ioo.LuaManager.Start();
+            // ioo.LuaManager.DoFile("Logic/Network");       //加载网络
+            LuaManager.DoFile("Logic/GameManager");    //加载游戏
+            // initialize = true;                     //初始化完 
+
+            // ioo.NetworkManager.OnInit();    //初始化网络
+
+            LuaManager.CallLuaFunction("GameManager.OnInitOK");   //初始化完成
+
+            object[] panels = LuaManager.CallLuaFunction("GameManager.LuaScriptPanel");  
+            //---------------------Lua面板---------------------------
+            foreach (object o in panels) {
+                string name = o.ToString().Trim();
+                if (string.IsNullOrEmpty(name)) continue;
+                name += "Panel";    //添加
+
+                LuaManager.DoFile("View/" + name);
+                Debugger.LogWarning("LoadLua---->>>>" + name + ".lua");
+            }
+            //------------------------------------------------------------
+            
+        }
         
         void Update() {
             if (LuaManager != null) {

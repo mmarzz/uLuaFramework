@@ -21,7 +21,7 @@ namespace SimpleFramework.Utils {
         public static string UpdateDataPath { get { return Application.persistentDataPath + "/update/data/"; } }
         public static string UpdateCachePath { get { return Application.persistentDataPath + "/update/cache/"; } }
 
-        private static List<string> luaPaths = new List<string>();
+        // private static List<string> luaPaths = new List<string>();
 
         public static int Int(object o) {
             return Convert.ToInt32(o);
@@ -331,46 +331,6 @@ namespace SimpleFramework.Utils {
             }
         }
 
-        // /// <summary>
-        // /// 应用程序内容路径
-        // /// </summary>
-        // public static string AppContentPath() {
-        //     string path = string.Empty;
-        //     switch (Application.platform) {
-        //         case RuntimePlatform.Android:
-        //             path = "jar:file://" + Application.dataPath + "!/assets/";
-        //         break;
-        //         case RuntimePlatform.IPhonePlayer:
-        //             path = Application.dataPath + "/Raw/";
-        //         break;
-        //         default:
-        //             path = Application.dataPath + "/StreamingAssets/";
-        //         break;
-        //     }
-        //     return path;
-        // }
-
-                // /// <summary>
-        // /// 取得数据存放目录
-        // /// </summary>
-        // public static string DataPath {
-        //     get {
-        //         string game = AppConst.AppName.ToLower();
-        //         if (Application.isMobilePlatform) {
-        //             return Application.persistentDataPath + "/" + game + "/";
-        //         }
-        //         if (Application.platform == RuntimePlatform.WindowsPlayer) {
-        //             return Application.streamingAssetsPath + "/";
-        //         }
-        //         if (AppConst.DebugMode) {
-        //             if (Application.isEditor) {
-        //                 return Application.dataPath + "/StreamingAssets/";
-        //             }
-        //         }
-        //         return "c:/" + game + "/";
-        //     }
-        // }
-
         /// <summary>
         /// 添加lua单机事件
         /// </summary>
@@ -392,50 +352,52 @@ namespace SimpleFramework.Utils {
                 name = name.Substring(0, index);
             }
             name = name.Replace('.', '/');
-            if (luaPaths.Count == 0) {
-                AddLuaPath(path + "lua/");
-            }
-            path = SearchLuaPath(name + ".lua");
-            // Debugger.LogWarning("----------------------" + path);
+            // if (luaPaths.Count == 0) {
+            //     AddLuaPath(path + "lua/");
+            // }
+            // path = SearchLuaPath(name + ".lua");
+            
+            path = path + "lua/" + name + ".lua";
+            Debugger.LogWarning("----------------------" + path);
             return path;
         }
 
-        /// <summary>
-        /// 获取Lua路径
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <returns></returns>
-        public static string SearchLuaPath(string fileName) {
-            string filePath = fileName;
-            for (int i = 0; i < luaPaths.Count; i++) {
-                filePath = luaPaths[i] + fileName;
-                if (File.Exists(filePath)) {
-                    return filePath;
-                }
-            }
-            return filePath;
-        }
+        // /// <summary>
+        // /// 获取Lua路径
+        // /// </summary>
+        // /// <param name="fileName"></param>
+        // /// <returns></returns>
+        // public static string SearchLuaPath(string fileName) {
+        //     string filePath = fileName;
+        //     for (int i = 0; i < luaPaths.Count; i++) {
+        //         filePath = luaPaths[i] + fileName;
+        //         if (File.Exists(filePath)) {
+        //             return filePath;
+        //         }
+        //     }
+        //     return filePath;
+        // }
 
-        /// <summary>
-        /// 添加的Lua路径
-        /// </summary>
-        /// <param name="path"></param>
-        public static void AddLuaPath(string path) {
-            if (!luaPaths.Contains(path)) {
-                if (!path.EndsWith("/")) {
-                    path += "/";
-                }
-                luaPaths.Add(path);
-            }
-        }
+        // /// <summary>
+        // /// 添加的Lua路径
+        // /// </summary>
+        // /// <param name="path"></param>
+        // public static void AddLuaPath(string path) {
+        //     if (!luaPaths.Contains(path)) {
+        //         if (!path.EndsWith("/")) {
+        //             path += "/";
+        //         }
+        //         luaPaths.Add(path);
+        //     }
+        // }
 
-        /// <summary>
-        /// 删除Lua路径
-        /// </summary>
-        /// <param name="path"></param>
-        public static void RemoveLuaPath(string path) {
-            luaPaths.Remove(path);
-        }
+        // /// <summary>
+        // /// 删除Lua路径
+        // /// </summary>
+        // /// <param name="path"></param>
+        // public static void RemoveLuaPath(string path) {
+        //     luaPaths.Remove(path);
+        // }
 
         public static void Log(string str) {
             Debug.Log(str);

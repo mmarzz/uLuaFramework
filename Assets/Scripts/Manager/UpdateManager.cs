@@ -15,10 +15,6 @@ namespace SimpleFramework.Manager {
     	Hashtable localFileList;
 		Hashtable serverFileList;
 		Hashtable updateFileList;
-
-        /// <summary>
-        /// 释放资源
-        /// </summary>
         public void Init() {
 
         	// Debugger.LogWarning("Application.persistentDataPath:" + Application.persistentDataPath);
@@ -28,12 +24,6 @@ namespace SimpleFramework.Manager {
             bool isExists = Directory.Exists(BundleUtil.UpdateDataPath) && File.Exists(BundleUtil.UpdateDataPath + BundleUtil.FileName);
             if (!AppConst.DebugMode && !isExists) 
            		StartCoroutine(ExtractResource());
-            
-            // TODO
-            // StartCoroutine(OnUpdateResource());
-
-           	CheckUpdate();
-            // OnResourceInited();
         }
 
         IEnumerator ExtractResource() {
@@ -54,9 +44,6 @@ namespace SimpleFramework.Manager {
         public void CheckUpdate() {
         	CheckUpdateFile((count) => {
            		Debugger.Log("<--- Update File Count" + count);
-           		// foreach (string key in updateFileList.Keys) {
-           			// Debugger.LogWarning(key);
-           		// }
            		if (count > 0) {
            			HotUpdate();
            		}
@@ -170,6 +157,7 @@ namespace SimpleFramework.Manager {
 
         	// 更新成功
         	Debugger.Log("<--- Success Update");
+        	CheckUpdate(); // 再 check 一遍，防止在更新时又加上新的热更新
         	OnUpdateSuccessed();
         }
 
@@ -224,39 +212,7 @@ namespace SimpleFramework.Manager {
         }
 
         private void OnUpdateSuccessed() {
-        	CheckUpdate(); // 再 check 一遍，防止在更新时又加上新的热更新
-        }
-
-        /// <summary>
-        /// 资源初始化结束
-        /// </summary>
-        public void OnResourceInited() {
-        	// TODO
-            ioo.LuaManager.Start();
-            // ioo.LuaManager.DoFile("Logic/Network");       //加载网络
-            ioo.LuaManager.DoFile("Logic/GameManager");    //加载游戏
-            // initialize = true;                     //初始化完 
-
-            // ioo.NetworkManager.OnInit();    //初始化网络
-
-            object[] panels = ioo.LuaManager.CallLuaFunction("GameManager.LuaScriptPanel");  
-            //---------------------Lua面板---------------------------
-            foreach (object o in panels) {
-                string name = o.ToString().Trim();
-                if (string.IsNullOrEmpty(name)) continue;
-                name += "Panel";    //添加
-
-                ioo.LuaManager.DoFile("View/" + name);
-                Debugger.LogWarning("LoadLua---->>>>" + name + ".lua");
-            }
-            //------------------------------------------------------------
-            ioo.LuaManager.CallLuaFunction("GameManager.OnInitOK");   //初始化完成
-        }
-
-        void OnUpdateFailed(string file) {
-            string message = "更新失败!>" + file;
-            Debugger.LogError(message);
-            // facade.SendMessageCommand(NotiConst.UPDATE_MESSAGE, message);
+        	
         }
 
     }

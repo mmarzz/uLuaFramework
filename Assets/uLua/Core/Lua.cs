@@ -299,9 +299,9 @@ namespace LuaInterface
                 return null;
             }
 
-            string luafile = Util.LuaPath(fileName);
+            // string luafile = Util.LuaPath(fileName);
             //Encoding.UTF8.GetByteCount(text)
-            if (LuaDLL.luaL_loadbuffer(L, text, text.Length, luafile) == 0)
+            if (LuaDLL.luaL_loadbuffer(L, text, text.Length, fileName) == 0)
             {
                 if (env != null)
                 {

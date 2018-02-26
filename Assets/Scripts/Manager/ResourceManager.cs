@@ -31,6 +31,14 @@ namespace SimpleFramework.Manager {
             if (func != null) func();    //��Դ��ʼ����ɣ��ص���Ϸ��������ִ�к������� 
         }
 
+
+        // public string LoadLua(string fileName) {
+        //     if (File.Exists(path)) {
+        //         str = File.ReadAllBytes(path);
+        //     }
+        // } 
+
+
         /// <summary>
         /// �����ز�
         /// </summary>

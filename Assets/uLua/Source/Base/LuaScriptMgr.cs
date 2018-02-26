@@ -421,7 +421,7 @@ public class LuaScriptMgr
 //#if UNITY_EDITOR && !LUA_ZIP
 //        DoFile("System.strict");
 //#endif
-        DoFile("System.Global");
+        DoFile("System/Global");
         InitLayers(lua.L);
 
         unpackVec3 = GetLuaReference("Vector3.Get");
@@ -446,13 +446,13 @@ public class LuaScriptMgr
         traceback = GetLuaFunction("traceback");
 #endif                       
 
-        DoFile("System.Main");
+        DoFile("System/Main");
         
         updateFunc = GetLuaFunction("Update");
         lateUpdateFunc = GetLuaFunction("LateUpdate");
         fixedUpdateFunc = GetLuaFunction("FixedUpdate");
         levelLoaded = GetLuaFunction("OnLevelWasLoaded");
-        CallLuaFunction("Main");
+        CallLuaFunction("Main"); // TODO
     }
 
     public void OnLevelLoaded(int level)
@@ -678,7 +678,7 @@ public class LuaScriptMgr
         fileList.Add(name);
 
 #if !LUA_ZIP
-        string path = Util.LuaPath(name);
+        string path = Util.LuaPath(name); // TODO!!!
 
         if (File.Exists(path))
         {
