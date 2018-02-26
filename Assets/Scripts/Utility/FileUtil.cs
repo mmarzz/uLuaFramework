@@ -53,5 +53,15 @@ namespace SimpleFramework.Utils {
 			Directory.CreateDirectory(dir);
 			return true;
 		}
+
+		public static bool Write (string fileName, byte[] bytes, FileMode mode = FileMode.OpenOrCreate) {
+			if (!ExistOrCreateDirectory(Path.GetDirectoryName(fileName)))
+				return false;
+			
+			using (FileStream fs = new FileStream(fileName, mode)) {
+				fs.Write(bytes, 0, bytes.Length);
+			}
+			return true;
+		}
     }
 }

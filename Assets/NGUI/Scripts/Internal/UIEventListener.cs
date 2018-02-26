@@ -20,6 +20,7 @@ public class UIEventListener : MonoBehaviour
 	public delegate void ObjectDelegate (GameObject go, GameObject obj);
 	public delegate void KeyCodeDelegate (GameObject go, KeyCode key);
 
+	public delegate void CallbackInt (int ret);
 	public delegate void CallbackBytes (byte[] bytes);
 
 	public object parameter;

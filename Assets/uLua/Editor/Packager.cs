@@ -123,7 +123,7 @@ public class Packager {
         Recursive(luaDataPath);
         int n = 0;
         foreach (string f in files) {
-            if (f.EndsWith(".meta")) continue;
+            // if (f.EndsWith(".meta")) continue; // TODO 不跳过 meta 文件
             string newfile = f.Replace(luaDataPath, "");
             string newpath = luaPath + newfile;
             string path = Path.GetDirectoryName(newpath);

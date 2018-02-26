@@ -10,8 +10,11 @@ using SimpleFramework.Utils;
 
 namespace SimpleFramework.Manager {
     public class UpdateManager : MonoBehaviour {
-		
-		private List<string> downloadFiles = new List<string>();
+
+
+    	Hashtable localFileList;
+		Hashtable serverFileList;
+		Hashtable updateFileList;
 
         /// <summary>
         /// 释放资源
@@ -29,7 +32,7 @@ namespace SimpleFramework.Manager {
             // TODO
             // StartCoroutine(OnUpdateResource());
 
-           	CheckUpdateFileCount();
+           	CheckUpdate();
             // OnResourceInited();
         }
 
@@ -39,41 +42,135 @@ namespace SimpleFramework.Manager {
 
             FileUtil.ExistOrClearDirectory(destPath);
 
-            Debugger.LogWarning("Extract --->");
+            Debugger.Log("Extract --->");
 
             FileUtil.CopyDirectory(srcPath, destPath);
 
-            Debugger.LogWarning("<--- Extract completed!");
+            Debugger.Log("<--- Extract Completed!");
 
             yield return null;
         }
 
+        public void CheckUpdate() {
+        	CheckUpdateFile((count) => {
+           		Debugger.Log("<--- Update File Count" + count);
+           		// foreach (string key in updateFileList.Keys) {
+           			// Debugger.LogWarning(key);
+           		// }
+           		if (count > 0) {
+           			HotUpdate();
+           		}
+           	});
+        }
+
+
         /// <summary>
-        ///	检查需要更新的文件数量
+        ///	检查需要更新的文件数量&大小 TODO
+        /// 会改变变量 localFileList serverFileList updateFileList
         /// </summary>
-        public int CheckUpdateFileCount() {
-        	if (!AppConst.UpdateMode)
-        		return -1;
+        public void CheckUpdateFile(UIEventListener.CallbackInt cb) {
+        	if (!AppConst.UpdateMode) {
+        		if (cb != null)
+					cb(-1);
+        	}
 
         	string fileUrl = AppConst.WebUrl + BundleUtil.FileName;
 
-        	Debugger.LogWarning("Load Update --->" + fileUrl);
+        	Debugger.Log("Load Update --->" + fileUrl);
 
-        	WWWLoadBytesAsync(fileUrl, 100, (bytes) => {
+        	int TIME_OUT = 100;
+        	WWWLoadBytesAsync(fileUrl, TIME_OUT, (bytes) => {
 
-        		string localFilePath = BundleUtil.UpdateDataPath + BundleUtil.FileName;
+        		string serverFlie = Encoding.UTF8.GetString(bytes);
+        		Hashtable serverFileList = LoadFileStringToTable(serverFlie);
 
-        		string svrFlie = Encoding.UTF8.GetString(bytes);
-        
-        		Hashtable svrFlieTable = LoadFileStringToTable(svrFlie);
-        		// Debugger.LogWarning(svrFlieTable.ToString());
+				string localFilePath = BundleUtil.UpdateDataPath + BundleUtil.FileName;
+				string localFile = null;
+            
+	            if (File.Exists(localFilePath))
+	            {
+	                byte[] localBytes = File.ReadAllBytes(localFilePath);
+	                localFile = Encoding.UTF8.GetString(localBytes);
+	            }
+	            localFileList = LoadFileStringToTable(localFile);
+				
+				int count = 0;
+				updateFileList = new Hashtable();
+				foreach (string key in serverFileList.Keys) {
+					string serverValue = (string) serverFileList[key];
+					if (localFileList.Contains(key)) {
+						string localValue = (string) localFileList[key];
+						if (!localValue.Equals(serverValue)) { // 修改的文件
+							updateFileList.Add(key, serverValue);
+							count ++;
+						}
+					} else { // 新增的文件
+						updateFileList.Add(key, serverValue);
+						count ++;
+					}
+				}
 
-        		WWW www = new WWW(localFilePath);
-        		string localFile = www.text;
-				Debugger.LogWarning(localFile);
+				if (cb != null)
+					cb(count);
         	});
-        	
-        	return 0;
+
+        }
+
+        public void HotUpdate() {
+        	ioo.GameManager.StartCoroutine(_HotUpdate());
+        }
+
+        private IEnumerator _HotUpdate() {
+        	string cachePath = BundleUtil.UpdateCachePath;
+        	FileUtil.ExistOrClearDirectory(BundleUtil.UpdateCachePath); // 清空 update/cache
+
+        	foreach (string fileName in updateFileList.Keys) {
+        		string serverFileUrl = AppConst.WebUrl + fileName;
+        		Debugger.Log("Begin Download ---> " + fileName);
+
+        		UnityWebRequest www = UnityWebRequest.Get(serverFileUrl);
+        		yield return www.Send();
+
+        		while (!www.isDone && string.IsNullOrEmpty(www.error))
+					yield return null;
+
+				byte[] bytes = null;
+				if (www.isError) {  
+	                Debugger.LogError("<--- Error Download" + fileName + "error: " + www.error);
+	                OnUpdateFailed(); // 更新失败
+	                yield break; 
+	            } else {
+	            	bytes = www.downloadHandler.data;
+	            }
+
+	            // 写入 update/cache
+	            string cacheFilePath = cachePath + fileName;
+	            FileUtil.Write(cacheFilePath, bytes);
+	            // 修改 localFileList 作为 cacheFileList
+	            string value = (string) updateFileList[fileName];
+	            if (localFileList.Contains(fileName)) {
+	            	localFileList[fileName] = value;
+	            } else {
+	            	localFileList.Add(fileName, value);
+	            }
+	         Debugger.Log("<--- Success Download" + fileName);
+
+        	}
+
+			// 写入 update/files.txt
+        	string cacheFile = LoadFileTableToString(localFileList);
+	        string cacheFileTxtPath = cachePath + BundleUtil.FileName;
+	        FileUtil.Write(cacheFileTxtPath, Encoding.ASCII.GetBytes(cacheFile));
+        
+        	// TODO 剪切文件
+        	if (!FileUtil.CopyDirectory(BundleUtil.UpdateCachePath, BundleUtil.UpdateDataPath))
+        		OnUpdateFailed();
+
+        	FileUtil.ExistOrClearDirectory(BundleUtil.UpdateCachePath); // 清空 update/cache
+
+        	// 更新成功
+        	Debugger.Log("<--- Success Update");
+        	OnUpdateSuccessed();
         }
 
         private void WWWLoadBytesAsync(string path, int timeout, UIEventListener.CallbackBytes cb) {
@@ -113,105 +210,23 @@ namespace SimpleFramework.Manager {
         	return table;
         }
 
-/**
 
-        IEnumerator OnUpdateResource() {
-            downloadFiles.Clear();
-
-            if (!AppConst.UpdateMode) {
-                ioo.ResourceManager.initialize(OnResourceInited);
-                yield break;
-            }
-            string dataPath = BundleUtil.UpdateDataPath;  // 下载数据目录
-            string url = AppConst.WebUrl;
-            string random = DateTime.Now.ToString("yyyymmddhhmmss");
-            string listUrl = url + "files.txt?v=" + random;
-            Debugger.LogWarning("LoadUpdate---->>>" + listUrl);
-
-            WWW www = new WWW(listUrl); yield return www;
-            if (www.error != null) {
-                OnUpdateFailed(string.Empty);
-                yield break;
-            }
-            if (!Directory.Exists(dataPath)) {
-                Directory.CreateDirectory(dataPath);
-            }
-            File.WriteAllBytes(dataPath + "files.txt", www.bytes);
-
-            string filesText = www.text;
-            string[] files = filesText.Split('\n');
-
-            string message = string.Empty;
-            for (int i = 0; i < files.Length; i++) {
-                if (string.IsNullOrEmpty(files[i])) continue;
-                string[] keyValue = files[i].Split('|');
-                string f = keyValue[0];
-                string localfile = (dataPath + f).Trim();
-                string path = Path.GetDirectoryName(localfile);
-                if (!Directory.Exists(path)) {
-                    Directory.CreateDirectory(path);
-                }
-                string fileUrl = url + keyValue[0] + "?v=" + random;
-                bool canUpdate = !File.Exists(localfile);
-                if (!canUpdate) {
-                    string remoteMd5 = keyValue[1].Trim();
-                    string localMd5 = Util.md5file(localfile);
-                    canUpdate = !remoteMd5.Equals(localMd5);
-                    if (canUpdate) File.Delete(localfile);
-                }
-                if (canUpdate) {   //本地缺少文件
-                    Debugger.Log(fileUrl);
-                    message = "downloading>>" + fileUrl;
-                    Debugger.Log(message);
-                    // facade.SendMessageCommand(NotiConst.UPDATE_MESSAGE, message);
-                   
-                    //这里都是资源文件，用线程下载
-                    BeginDownload(fileUrl, localfile);
-                    while (!(IsDownOK(localfile))) { yield return new WaitForEndOfFrame(); }
-                }
-            }
-            yield return new WaitForEndOfFrame();
-            message = "更新完成!!";
-            Debugger.Log(message);
-            // facade.SendMessageCommand(NotiConst.UPDATE_MESSAGE, message);
-
-            ioo.ResourceManager.initialize(OnResourceInited);
+		private string LoadFileTableToString(Hashtable table) {
+        	StringBuilder sb = new StringBuilder();
+        	foreach (DictionaryEntry kv in table) {
+        		sb.Append(kv.Key + "|" + kv.Value + "\n");
+        	}
+        	return sb.ToString();
         }
 
-        /// <summary>
-        /// 是否下载完成
-        /// </summary>
-        bool IsDownOK(string file) {
-            return downloadFiles.Contains(file);
+        private void OnUpdateFailed() {
+
         }
 
-        /// <summary>
-        /// 线程下载
-        /// </summary>
-        void BeginDownload(string url, string file) {     //线程下载
-            object[] param = new object[2] {url, file};
-
-            ThreadEvent ev = new ThreadEvent();
-            ev.Key = NotiConst.UPDATE_DOWNLOAD;
-            ev.evParams.AddRange(param);
-            ioo.ThreadManager.AddEvent(ev, OnThreadCompleted);   //线程下载
+        private void OnUpdateSuccessed() {
+        	CheckUpdate(); // 再 check 一遍，防止在更新时又加上新的热更新
         }
 
-        /// <summary>
-        /// 线程完成
-        /// </summary>
-        /// <param name="data"></param>
-        void OnThreadCompleted(NotiData data) {
-            switch (data.evName) {
-                case NotiConst.UPDATE_EXTRACT:  //解压一个完成
-                    //
-                break;
-                case NotiConst.UPDATE_DOWNLOAD: //下载一个完成
-                    downloadFiles.Add(data.evParam.ToString());
-                break;
-            }
-        }
-**/
         /// <summary>
         /// 资源初始化结束
         /// </summary>
