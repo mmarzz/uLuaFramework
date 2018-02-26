@@ -132,7 +132,7 @@ namespace SimpleFramework.Manager {
 
 	            // 写入 update/cache
 	            string cacheFilePath = cachePath + fileName;
-	            FileUtil.Write(cacheFilePath, bytes);
+	            FileUtil.WriteBytes(cacheFilePath, bytes);
 	            // 修改 localFileList 作为 cacheFileList
 	            string value = (string) updateFileList[fileName];
 	            if (localFileList.Contains(fileName)) {
@@ -147,9 +147,9 @@ namespace SimpleFramework.Manager {
 			// 写入 update/files.txt
         	string cacheFile = LoadFileTableToString(localFileList);
 	        string cacheFileTxtPath = cachePath + BundleUtil.FileName;
-	        FileUtil.Write(cacheFileTxtPath, Encoding.ASCII.GetBytes(cacheFile));
+	        FileUtil.WriteBytes(cacheFileTxtPath, Encoding.ASCII.GetBytes(cacheFile));
         
-        	// TODO 剪切文件
+        	// 移动文件
         	if (!FileUtil.CopyDirectory(BundleUtil.UpdateCachePath, BundleUtil.UpdateDataPath))
         		OnUpdateFailed();
 

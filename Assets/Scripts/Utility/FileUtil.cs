@@ -54,7 +54,13 @@ namespace SimpleFramework.Utils {
 			return true;
 		}
 
-		public static bool Write (string fileName, byte[] bytes, FileMode mode = FileMode.OpenOrCreate) {
+		public static byte[] ReadBytes(string fileName) {
+			if (!File.Exists(fileName)) 
+				return null;
+            return File.ReadAllBytes(fileName);
+		}
+
+		public static bool WriteBytes(string fileName, byte[] bytes, FileMode mode = FileMode.OpenOrCreate) {
 			if (!ExistOrCreateDirectory(Path.GetDirectoryName(fileName)))
 				return false;
 			

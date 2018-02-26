@@ -10,9 +10,6 @@ namespace SimpleFramework.Manager {
     public class ResourceManager : MonoBehaviour {
         private AssetBundle shared;
 
-        /// <summary>
-        /// ��ʼ��
-        /// </summary>
         public void initialize(Action func) {
             if (AppConst.ExampleMode) {
                 byte[] stream;
@@ -29,7 +26,7 @@ namespace SimpleFramework.Manager {
                 shared.Load("Dialog", typeof(GameObject));
 #endif
             }
-            if (func != null) func();    //��Դ��ʼ����ɣ��ص���Ϸ��������ִ�к������� 
+            if (func != null) func();   
         }
 
 
@@ -43,17 +40,13 @@ namespace SimpleFramework.Manager {
 
             filePath = filePath.ToLower();
 
-            if (AppConst.DebugMode) { // debug模式下读项目内 lua
+            if (AppConst.DebugMode) { // debug 模式下读项目内 lua
                 filePath = Application.dataPath + "/" + filePath;
             } else {
                 filePath = BundleUtil.UpdateDataPath + "/" + filePath;
             }
 
-
-            byte[] bytes = null;
-            if (File.Exists(filePath)) {
-                bytes = File.ReadAllBytes(filePath);
-            }
+            byte[] bytes = FileUtil.ReadBytes(filePath);
 
             return bytes;
         } 
