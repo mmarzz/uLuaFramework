@@ -15,7 +15,7 @@ namespace SimpleFramework.Manager {
                 byte[] stream;
                 string uri = string.Empty;
                 //------------------------------------Shared--------------------------------------
-                uri = BundleUtil.UpdateDataPath + "shared.assetbundle";
+                uri = BundleUtils.UpdateDataPath + "shared.assetbundle";
                 Debug.LogWarning("LoadFile::>> " + uri);
 
                 stream = File.ReadAllBytes(uri);
@@ -43,10 +43,10 @@ namespace SimpleFramework.Manager {
             if (AppConst.DebugMode) { // debug 模式下读项目内 lua
                 filePath = Application.dataPath + "/" + filePath;
             } else {
-                filePath = BundleUtil.UpdateDataPath + "/" + filePath;
+                filePath = BundleUtils.UpdateDataPath + "/" + filePath;
             }
 
-            byte[] bytes = FileUtil.ReadBytes(filePath);
+            byte[] bytes = FileUtils.ReadBytes(filePath);
 
             return bytes;
         } 
@@ -58,7 +58,7 @@ namespace SimpleFramework.Manager {
         public AssetBundle LoadBundle(string name) {
             byte[] stream = null;
             AssetBundle bundle = null;
-            string uri = BundleUtil.UpdateDataPath + name.ToLower() + ".assetbundle";
+            string uri = BundleUtils.UpdateDataPath + name.ToLower() + ".assetbundle";
             stream = File.ReadAllBytes(uri);
             bundle = AssetBundle.LoadFromMemory(stream); //�������ݵ��زİ�
             return bundle;

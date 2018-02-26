@@ -21,20 +21,20 @@ namespace SimpleFramework.Manager {
         	// Debugger.LogWarning("Application.streamingAssetsPath:" + Application.streamingAssetsPath);
         	// Debugger.LogWarning("Application.dataPath:" + Application.dataPath);
 
-            bool isExists = Directory.Exists(BundleUtil.UpdateDataPath) && File.Exists(BundleUtil.UpdateDataPath + BundleUtil.FileName);
+            bool isExists = Directory.Exists(BundleUtils.UpdateDataPath) && File.Exists(BundleUtils.UpdateDataPath + BundleUtils.FileName);
             if (!AppConst.DebugMode && !isExists) 
            		StartCoroutine(ExtractResource());
         }
 
         IEnumerator ExtractResource() {
-            string destPath = BundleUtil.UpdateDataPath;  // destination 下载数据目录
-            string srcPath = BundleUtil.StreamingDataPath; // source 游戏包资源目录
+            string destPath = BundleUtils.UpdateDataPath;  // destination 下载数据目录
+            string srcPath = BundleUtils.StreamingDataPath; // source 游戏包资源目录
 
-            FileUtil.ExistOrClearDirectory(destPath);
+            FileUtils.ExistOrClearDirectory(destPath);
 
             Debugger.Log("Extract --->");
 
-            FileUtil.CopyDirectory(srcPath, destPath);
+            FileUtils.CopyDirectory(srcPath, destPath);
 
             Debugger.Log("<--- Extract Completed!");
 
@@ -61,7 +61,7 @@ namespace SimpleFramework.Manager {
 					cb(-1);
         	}
 
-        	string fileUrl = AppConst.WebUrl + BundleUtil.FileName;
+        	string fileUrl = AppConst.WebUrl + BundleUtils.FileName;
 
         	Debugger.Log("Load Update --->" + fileUrl);
 
@@ -71,12 +71,12 @@ namespace SimpleFramework.Manager {
         		string serverFlie = Encoding.UTF8.GetString(bytes);
         		Hashtable serverFileList = LoadFileStringToTable(serverFlie);
 
-				string localFilePath = BundleUtil.UpdateDataPath + BundleUtil.FileName;
+				string localFilePath = BundleUtils.UpdateDataPath + BundleUtils.FileName;
 				string localFile = null;
             
 	            if (File.Exists(localFilePath))
 	            {
-	                byte[] localBytes = File.ReadAllBytes(localFilePath);
+	                byte[] localBytes = FileUtils.ReadBytes(localFilePath);
 	                localFile = Encoding.UTF8.GetString(localBytes);
 	            }
 	            localFileList = LoadFileStringToTable(localFile);
@@ -108,8 +108,8 @@ namespace SimpleFramework.Manager {
         }
 
         private IEnumerator _HotUpdate() {
-        	string cachePath = BundleUtil.UpdateCachePath;
-        	FileUtil.ExistOrClearDirectory(BundleUtil.UpdateCachePath); // 清空 update/cache
+        	string cachePath = BundleUtils.UpdateCachePath;
+        	FileUtils.ExistOrClearDirectory(BundleUtils.UpdateCachePath); // 清空 update/cache
 
         	foreach (string fileName in updateFileList.Keys) {
         		string serverFileUrl = AppConst.WebUrl + fileName;
@@ -132,7 +132,7 @@ namespace SimpleFramework.Manager {
 
 	            // 写入 update/cache
 	            string cacheFilePath = cachePath + fileName;
-	            FileUtil.WriteBytes(cacheFilePath, bytes);
+	            FileUtils.WriteBytes(cacheFilePath, bytes);
 	            // 修改 localFileList 作为 cacheFileList
 	            string value = (string) updateFileList[fileName];
 	            if (localFileList.Contains(fileName)) {
@@ -146,14 +146,14 @@ namespace SimpleFramework.Manager {
 
 			// 写入 update/files.txt
         	string cacheFile = LoadFileTableToString(localFileList);
-	        string cacheFileTxtPath = cachePath + BundleUtil.FileName;
-	        FileUtil.WriteBytes(cacheFileTxtPath, Encoding.ASCII.GetBytes(cacheFile));
+	        string cacheFileTxtPath = cachePath + BundleUtils.FileName;
+	        FileUtils.WriteBytes(cacheFileTxtPath, Encoding.ASCII.GetBytes(cacheFile));
         
         	// 移动文件
-        	if (!FileUtil.CopyDirectory(BundleUtil.UpdateCachePath, BundleUtil.UpdateDataPath))
+        	if (!FileUtils.CopyDirectory(BundleUtils.UpdateCachePath, BundleUtils.UpdateDataPath))
         		OnUpdateFailed();
 
-        	FileUtil.ExistOrClearDirectory(BundleUtil.UpdateCachePath); // 清空 update/cache
+        	FileUtils.ExistOrClearDirectory(BundleUtils.UpdateCachePath); // 清空 update/cache
 
         	// 更新成功
         	Debugger.Log("<--- Success Update");

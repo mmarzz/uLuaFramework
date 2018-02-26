@@ -5,7 +5,7 @@ using System;
 // using SimpleFramework.Manager;
 
 namespace SimpleFramework.Utils {
-    public class FileUtil {
+    public class FileUtils {
 
     	public static bool CopyFile(string srcPath, string destPath) {
     		if (!File.Exists(srcPath))

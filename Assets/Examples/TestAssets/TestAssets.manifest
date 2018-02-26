@@ -1,0 +1,21 @@
+ManifestFileVersion: 0
+CRC: 3451965899
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: i6/atlas/dialog.prefab
+      Dependencies: {}
+    Info_1:
+      Name: i6/atlas/prompt.prefab
+      Dependencies: {}
+    Info_2:
+      Name: i6/prefabs/messagepanel.prefab
+      Dependencies:
+        Dependency_0: i6/atlas/dialog.prefab
+    Info_3:
+      Name: i6/prefabs/promptitem.prefab
+      Dependencies: {}
+    Info_4:
+      Name: i6/prefabs/promptpanel.prefab
+      Dependencies:
+        Dependency_0: i6/atlas/dialog.prefab

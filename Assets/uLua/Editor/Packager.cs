@@ -70,7 +70,7 @@ public class Packager {
         BuildAssetBundleOptions options = BuildAssetBundleOptions.UncompressedAssetBundle |
                                           BuildAssetBundleOptions.CollectDependencies |
                                           BuildAssetBundleOptions.DeterministicAssetBundle;
-        string dataPath = BundleUtil.StreamingDataPath;
+        string dataPath = BundleUtils.StreamingDataPath;
         if (Directory.Exists(dataPath)) {
             Directory.Delete(dataPath, true);
         }

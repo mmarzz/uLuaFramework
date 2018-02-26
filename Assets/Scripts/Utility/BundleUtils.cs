@@ -4,7 +4,7 @@ using System;
 // using SimpleFramework.Manager;
 
 namespace SimpleFramework.Utils {
-    public class BundleUtil {
+    public class BundleUtils {
 
     	public static string FileName = "files.txt";
 
