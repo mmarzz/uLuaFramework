@@ -25,10 +25,11 @@ public class BundleTools {
 			return;
 		}
 
-        CopyLua();
-        SetAssetBundleName();
-        BuildAssetBundles(target);
+        // CopyLua();
+        // SetAssetBundleName();
+        // BuildAssetBundles(target);
         // DeleteManifestFiles();
+        SaveFilesText(target);
 
         AssetDatabase.Refresh();
     }
@@ -66,7 +67,6 @@ public class BundleTools {
             AssetImporter ai = AssetImporter.GetAtPath(assetName);
 
             if (ai != null) {
-                Debugger.LogWarning(file + "\n" + name);
                 ai.assetBundleName = name;
             }
         }
@@ -91,5 +91,49 @@ public class BundleTools {
 				File.Delete(file);
 		}
 	}
+
+    private static void SaveFilesText(BuildTarget target) {
+        string streamingPath = bundlePath + "StreamingAssets";
+		AssetBundle asset = AssetBundle.LoadFromFile(streamingPath);
+		AssetBundleManifest bundleManifest = asset.LoadAsset("AssetBundleManifest") as AssetBundleManifest;
+		asset.Unload(false);
+
+		Hashtable bundleDatas = new Hashtable();
+		string[] bundleList = bundleManifest.GetAllAssetBundles();
+		foreach (string bundleName in bundleList) {
+            ArrayList fileInfo = new ArrayList();
+
+			string abPath = bundlePath + bundleName;
+            
+            // TODO 查找依赖
+            // SortList<string> deps = GetBundleDependencies(obj);
+			// byte[] buffer = GetFilesBuffer(deps);
+
+            byte[] fileBytes = FileUtils.ReadBytes(abPath);
+            long fileSize = fileBytes.Length;
+            string fileMD5 = MD5Utils.GetMD5(fileBytes);
+			
+            fileInfo.Add(fileSize);
+            fileInfo.Add(fileMD5);
+			bundleDatas.Add(bundleName, fileInfo);
+        }
+
+        // 保存到 files.txt
+        string tmpPath = bundlePath + "tmp/";
+        string filePath = tmpPath + "files.txt";
+        string jsonStr = MiniJSON.jsonEncode(bundleDatas);
+        byte[] bytes = Encoding.UTF8.GetBytes(jsonStr);
+        FileUtils.WriteBytes(filePath, bytes);
+        // 生成 assetbundle
+        AssetBundleBuild[] buildMap = new AssetBundleBuild[1];
+		string[] assetNames = new string[1];
+		BuildAssetBundleOptions options = BuildAssetBundleOptions.ChunkBasedCompression; //LZ4压缩
+
+        assetNames[0] = filePath;
+		buildMap[0].assetNames = assetNames;
+		buildMap[0].assetBundleName = "filelist";
+		BuildPipeline.BuildAssetBundles(tmpPath, buildMap, options, target);
+
+    }
 
 }
