@@ -52,7 +52,7 @@ namespace SimpleFramework.Manager {
 
 
         /// <summary>
-        ///	检查需要更新的文件数量&大小 TODO
+        ///	检查需要更新的文件数量 & 大小 TODO
         /// 会改变变量 localFileList serverFileList updateFileList
         /// </summary>
         public void CheckUpdateFile(UIEventListener.CallbackInt cb) {
@@ -84,9 +84,9 @@ namespace SimpleFramework.Manager {
 				int count = 0;
 				updateFileList = new Hashtable();
 				foreach (string key in serverFileList.Keys) {
-					string serverValue = (string) serverFileList[key];
+					string serverValue = serverFileList[key].ToString();
 					if (localFileList.Contains(key)) {
-						string localValue = (string) localFileList[key];
+						string localValue = localFileList[key].ToString();
 						if (!localValue.Equals(serverValue)) { // 修改的文件
 							updateFileList.Add(key, serverValue);
 							count ++;
@@ -134,7 +134,7 @@ namespace SimpleFramework.Manager {
 	            string cacheFilePath = cachePath + fileName;
 	            FileUtils.WriteBytes(cacheFilePath, bytes);
 	            // 修改 localFileList 作为 cacheFileList
-	            string value = (string) updateFileList[fileName];
+	            string value = updateFileList[fileName].ToString();
 	            if (localFileList.Contains(fileName)) {
 	            	localFileList[fileName] = value;
 	            } else {

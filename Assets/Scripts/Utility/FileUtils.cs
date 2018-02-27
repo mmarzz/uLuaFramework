@@ -7,6 +7,8 @@ using System;
 namespace SimpleFramework.Utils {
     public class FileUtils {
 
+	public delegate bool PathFunc(string path);
+
     	public static bool CopyFile(string srcPath, string destPath) {
     		if (!File.Exists(srcPath))
     			return false;
@@ -14,29 +16,33 @@ namespace SimpleFramework.Utils {
     		return true;
     	}
 
-    	public static bool CopyDirectory(string srcDir, string destDir) {
-    		if (!CopyFilesInDirectory(srcDir, destDir))
+    	public static bool CopyDirectory(string srcDir, string destDir, PathFunc filterFunc = null) {
+    		if (!CopyFilesInDirectory(srcDir, destDir, filterFunc))
     			return false;
 
     		string destSubDirPath = null;
     		foreach (string srcSubDirPath in Directory.GetDirectories(srcDir)) {
     			destSubDirPath = destDir + srcSubDirPath.Substring(srcDir.Length);
-    			if (!CopyDirectory(srcSubDirPath, destSubDirPath))
+    			if (!CopyDirectory(srcSubDirPath, destSubDirPath, filterFunc))
     			return false;
     		}
     		return true;
     	}
 
-    	public static bool CopyFilesInDirectory(string srcDir, string destDir) {
+    	public static bool CopyFilesInDirectory(string srcDir, string destDir, PathFunc filterFunc = null) {
     		if (!Directory.Exists(srcDir))
     			return false;
+			if (filterFunc != null && !filterFunc(srcDir))
+				return false;
     		if (!ExistOrCreateDirectory(destDir))
     			return false;
 
     		string destFilePath = null;
     		foreach (string srcFilePath in Directory.GetFiles(srcDir)) {
-    			destFilePath = destDir + srcFilePath.Substring(srcDir.Length);
-    			File.Copy(srcFilePath, destFilePath, true);
+				if (filterFunc == null || filterFunc(srcFilePath)) {
+					destFilePath = destDir + srcFilePath.Substring(srcDir.Length);
+					File.Copy(srcFilePath, destFilePath, true);
+				}
     		}
     		return true;
     	}

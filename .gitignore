@@ -36,4 +36,5 @@ sysinfo.txt
 
 # Customer
 Assets/StreamingAssets*
+Assets/Examples/StreamingAssets*
 Assets/uLua/Source/LuaWrap*

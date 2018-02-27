@@ -165,7 +165,7 @@ end
 
 --测试pbc--
 function GameManager.test_pbc_func()
-    local path = BundleUtil.UpdateDataPath.."lua/3rd/pbc/addressbook.pb";
+    local path = BundleUtils.UpdateDataPath.."lua/3rd/pbc/addressbook.pb";
     log('io.open--->>>'..path);
 
     local addr = io.open(path, "rb")
@@ -187,7 +187,7 @@ end
 
 --pbc callback--
 function GameManager.OnPbcCall(data)
-    local path = BundleUtil.UpdateDataPath.."lua/3rd/pbc/addressbook.pb";
+    local path = BundleUtils.UpdateDataPath.."lua/3rd/pbc/addressbook.pb";
 
     local addr = io.open(path, "rb")
     local buffer = addr:read "*a"
@@ -204,7 +204,7 @@ end
 
 --测试cjson--
 function GameManager.test_cjson_func()
-    local path = BundleUtil.UpdateDataPath.."lua/3rd/cjson/example2.json";
+    local path = BundleUtils.UpdateDataPath.."lua/3rd/cjson/example2.json";
     local text = util.file_load(path);
     LuaHelper.OnJsonCallFunc(text, this.OnJsonCall);
 end

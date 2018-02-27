@@ -67,9 +67,9 @@ public static class WrapFile {
         _GT(typeof(SkinnedMeshRenderer)),
         _GT(typeof(Light)),
         _GT(typeof(LightType)),     
-        _GT(typeof(ParticleEmitter)),
-        _GT(typeof(ParticleRenderer)),
-        _GT(typeof(ParticleAnimator)),        
+        // _GT(typeof(ParticleEmitter)),
+        // _GT(typeof(ParticleRenderer)),
+        // _GT(typeof(ParticleAnimator)),     
                 
         _GT(typeof(Physics)),
         _GT(typeof(Collider)),
