@@ -25,10 +25,10 @@ public class BundleTools {
 			return;
 		}
 
-        // CopyLua();
-        // SetAssetBundleName();
-        // BuildAssetBundles(target);
-        // DeleteManifestFiles();
+        CopyLua();
+        SetAssetBundleName();
+        BuildAssetBundles(target);
+        DeleteManifestFiles();
         SaveFilesText(target);
 
         AssetDatabase.Refresh();
@@ -119,11 +119,14 @@ public class BundleTools {
         }
 
         // 保存到 files.txt
-        string tmpPath = bundlePath + "tmp/";
+        string tmpPath = "Assets/tmp/"; // 一定要写绝对的路径
         string filePath = tmpPath + "files.txt";
         string jsonStr = MiniJSON.jsonEncode(bundleDatas);
         byte[] bytes = Encoding.UTF8.GetBytes(jsonStr);
         FileUtils.WriteBytes(filePath, bytes);
+
+        AssetDatabase.Refresh();
+
         // 生成 assetbundle
         AssetBundleBuild[] buildMap = new AssetBundleBuild[1];
 		string[] assetNames = new string[1];
@@ -131,8 +134,14 @@ public class BundleTools {
 
         assetNames[0] = filePath;
 		buildMap[0].assetNames = assetNames;
-		buildMap[0].assetBundleName = "filelist";
+		buildMap[0].assetBundleName = "files";
 		BuildPipeline.BuildAssetBundles(tmpPath, buildMap, options, target);
+
+        // copy
+		FileUtils.CopyFile(tmpPath + "files", bundlePath + "files");
+		FileUtils.CopyFile(filePath, bundlePath + "files.txt");
+		Directory.Delete(tmpPath, true);
+		AssetDatabase.Refresh();
 
     }
 
