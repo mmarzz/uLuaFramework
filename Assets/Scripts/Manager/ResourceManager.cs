@@ -52,21 +52,22 @@ namespace SimpleFramework.Manager {
         } 
 
 
-        /// <summary>
-        /// �����ز�
-        /// </summary>
         public AssetBundle LoadBundle(string name) {
-            byte[] stream = null;
-            AssetBundle bundle = null;
             string uri = BundleUtils.UpdateDataPath + name.ToLower() + ".assetbundle";
-            stream = File.ReadAllBytes(uri);
-            bundle = AssetBundle.LoadFromMemory(stream); //�������ݵ��زİ�
+
+            return LoadAssetBundle(uri);
+        }
+
+        public AssetBundle LoadAssetBundle(string path) {
+            AssetBundle bundle = null;
+            bundle = AssetBundle.LoadFromFile(path);
+
+            if (bundle == null) {
+                Debugger.LogError(string.Format("Loading Asset Bundle Error: {0}", path));
+            }
             return bundle;
         }
 
-        /// <summary>
-        /// ������Դ
-        /// </summary>
         void OnDestroy() {
             if (shared != null) shared.Unload(true);
             Debug.Log("~ResourceManager was destroy!");

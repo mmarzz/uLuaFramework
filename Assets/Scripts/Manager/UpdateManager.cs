@@ -74,8 +74,7 @@ namespace SimpleFramework.Manager {
 				string localFilePath = BundleUtils.UpdateDataPath + BundleUtils.FileName;
 				string localFile = null;
             
-	            if (File.Exists(localFilePath))
-	            {
+	            if (File.Exists(localFilePath)) {
 	                byte[] localBytes = FileUtils.ReadBytes(localFilePath);
 	                localFile = Encoding.UTF8.GetString(localBytes);
 	            }

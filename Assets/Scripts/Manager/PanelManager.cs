@@ -19,19 +19,14 @@ namespace SimpleFramework.Manager {
             }
         }
 
-        /// <summary>
-        /// ������壬������Դ������
-        /// </summary>
-        /// <param name="type"></param>
+
         public void CreatePanel(string name, LuaFunction func = null) {
             AssetBundle bundle = ioo.ResourceManager.LoadBundle(name);
             StartCoroutine(StartCreatePanel(name, bundle, func));
             Debug.LogWarning("CreatePanel::>> " + name + " " + bundle);
         }
 
-        /// <summary>
-        /// �������
-        /// </summary>
+
         IEnumerator StartCreatePanel(string name, AssetBundle bundle, LuaFunction func = null) {
             name += "Panel";
             GameObject prefab = Util.LoadAsset(bundle, name);

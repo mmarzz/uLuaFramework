@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace SimpleFramework {
     public class AppConst {
-        // 开启时不会加载asset文件夹内资源 关闭时加载datapath文件夹内资源
+        // 开启时加载asset文件夹内资源 关闭时加载datapath文件夹内资源
         public const bool DebugMode = true;                        //调试模式-用于内部测试
 
         /// <summary>
